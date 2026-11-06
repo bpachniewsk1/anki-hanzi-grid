@@ -51,6 +51,17 @@ restart Anki.
 Requires Anki 24.06 or newer on desktop (Windows, macOS, Linux). Add-ons
 don't run on AnkiMobile, AnkiDroid or AnkiWeb.
 
+## Quick start
+
+Once it's installed:
+
+1. In Anki's main window, open **Tools → Hanzi Grid**.
+2. Click **⚙ Settings** at the top right of the grid, tick your Chinese
+   deck(s), choose the fields that hold the word, pinyin and meaning, and
+   click **Save**. The grid reopens with your characters. (Using the
+   [Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi) deck? The
+   defaults already fit it, so you can skip this step.)
+
 ## Use
 
 1. **Tools → Hanzi Grid**.
