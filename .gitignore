@@ -1,0 +1,8 @@
+# Built packages (python3 build_ankiaddon.py)
+build/
+# Python cache, Anki's per-user add-on settings, macOS files
+__pycache__/
+meta.json
+.DS_Store
+# Private notes: publishing steps and the licence review (not for the public repo)
+PUBLISHING.md
