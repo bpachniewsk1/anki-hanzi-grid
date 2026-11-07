@@ -5,5 +5,6 @@
   "level_field": "HskLevel",
   "pinyin_field": "Pinyin",
   "meaning_fields": ["SimpleMeaning", "Definitions"],
-  "mature_days": 21
+  "mature_days": 21,
+  "mastered_days": 90
 }

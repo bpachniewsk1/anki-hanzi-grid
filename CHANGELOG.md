@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.0 (2026-11-07)
+
+- New top status **mastered**: cards with an interval of 90 days or more
+  (gold characters on deep green). Change it with "Mastered from" in the
+  Settings window (config key `mastered_days`).
+- Progress lines now also count mastered characters.
+
 ## 1.0.0 (2026-11-06)
 
 First release.

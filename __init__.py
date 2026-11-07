@@ -54,6 +54,7 @@ STATUS_NAMES = {
     grid_data.LEARNING: "Learning",
     grid_data.YOUNG: "Young",
     grid_data.MATURE: "Mature",
+    grid_data.MASTERED: "Mastered",
 }
 
 CSS = """
@@ -106,6 +107,7 @@ h2 { margin: 1.6em 0 .3em; font-size: 1.1em; }
 .s1 { background: #f2c14e; color: #222; }
 .s2 { background: #9fd59a; color: #222; }
 .s3 { background: #2f8f57; color: #fff; }
+.s4 { background: #17472c; color: #ffd866; }
 """
 
 # Clicks are sent to Python with pycmd(), Anki's bridge from the web page
@@ -172,19 +174,22 @@ def percent(part: int, whole: int) -> float:
 
 
 def progress(statuses: list[int]) -> str:
-    """A stacked bar (mature, young, learning) plus a line of numbers."""
+    """A stacked bar (mastered, mature, young, learning) plus a line of
+    numbers. Mastered characters count as mature too."""
     total = len(statuses)
     counts = {s: statuses.count(s) for s in STATUS_NAMES}
     segments = "".join(
         f"<div class='s{s}' style='width:{percent(counts[s], total):.2f}%' "
         f"title='{STATUS_NAMES[s]}: {counts[s]}'></div>"
-        for s in (grid_data.MATURE, grid_data.YOUNG, grid_data.LEARNING)
+        for s in (grid_data.MASTERED, grid_data.MATURE, grid_data.YOUNG, grid_data.LEARNING)
     )
     studied = total - counts[grid_data.UNSEEN]
-    mature = counts[grid_data.MATURE]
+    mastered = counts[grid_data.MASTERED]
+    mature = counts[grid_data.MATURE] + mastered
     numbers = (
         f"{studied} / {total} studied ({percent(studied, total):.0f}%) · "
-        f"{mature} mature ({percent(mature, total):.0f}%)"
+        f"{mature} mature ({percent(mature, total):.0f}%) · "
+        f"{mastered} mastered ({percent(mastered, total):.0f}%)"
     )
     return f"<div class='bar'>{segments}</div><div class='counts'>{numbers}</div>"
 
@@ -392,6 +397,7 @@ def open_grid() -> None:
             hanzi_fields=config["hanzi_fields"],
             level_field=config["level_field"],
             mature_days=config["mature_days"],
+            mastered_days=config.get("mastered_days", 90),
             decks=decks,
             pinyin_field=config.get("pinyin_field", ""),
             meaning_fields=config.get("meaning_fields", []),

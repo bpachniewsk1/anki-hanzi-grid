@@ -119,12 +119,17 @@ class SettingsDialog(QDialog):
         self.backup_meaning_field = optional_field(meanings[1])
         form.addRow("…if that's empty:", self.backup_meaning_field)
 
-        # --- Mature threshold --------------------------------------------
+        # --- Mature and mastered thresholds -------------------------------
         self.mature_days = QSpinBox()
         self.mature_days.setRange(1, 3650)
         self.mature_days.setSuffix(" days")
         self.mature_days.setValue(config.get("mature_days", 21))
         form.addRow("Mature from:", self.mature_days)
+        self.mastered_days = QSpinBox()
+        self.mastered_days.setRange(1, 3650)
+        self.mastered_days.setSuffix(" days")
+        self.mastered_days.setValue(config.get("mastered_days", 90))
+        form.addRow("Mastered from:", self.mastered_days)
 
         # --- Save / Cancel -------------------------------------------------
         buttons = QDialogButtonBox(
@@ -134,7 +139,7 @@ class SettingsDialog(QDialog):
         qconnect(buttons.rejected, self.reject)
         form.addRow(buttons)
 
-        self.resize(460, 600)
+        self.resize(460, 630)
 
     def accept(self) -> None:
         """Save was clicked: copy the widgets' values into the config."""
@@ -151,6 +156,8 @@ class SettingsDialog(QDialog):
         meanings = [field_name(self.meaning_field), field_name(self.backup_meaning_field)]
         self.config["meaning_fields"] = [name for name in meanings if name]
         self.config["mature_days"] = self.mature_days.value()
+        # Mastered can't come before mature.
+        self.config["mastered_days"] = max(self.mastered_days.value(), self.mature_days.value())
 
         super().accept()  # closes the dialog
         self.on_save(self.config)  # __init__.py saves it and rebuilds the grid

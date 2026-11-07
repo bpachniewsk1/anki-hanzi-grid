@@ -16,19 +16,20 @@ progress bar for each level.
   | yellow | learning / relearning |
   | light green | young (in review, interval under 21 days) |
   | dark green | mature (interval 21 days or more) |
+  | gold on deep green | mastered (interval 90 days or more) |
 
   A character takes the best colour among all cards whose word contains it,
   so 学 turns green once you know 学习 *or* 学生.
 - **Grouped by HSK level** (official HSK 3.1 character list, or worked out
   from your deck's word levels; see below).
 - **Progress bars** for each level and for all levels together, with
-  "studied / total" and "mature" numbers.
+  "studied", "mature" and "mastered" numbers.
 - **Hover a character** to see its pinyin and meaning.
 - **Click a character** to see the answer side of the cards of every word
   that contains it, in Anki's own preview window. **Shift+click** to find
   them in the Browser.
 - **Settings window** to choose decks, level source, fields and the mature
-  threshold.
+  and mastered thresholds.
 - **Read-only:** the add-on never changes your cards or notes.
 
 ![Hovering 几 shows jǐ, how much/many?](screenshots/hover.png)
@@ -94,6 +95,7 @@ Click **⚙ Settings** in the grid, or select Hanzi Grid in
 | Pinyin field | Shown when hovering a character. | `Pinyin` |
 | Meaning field | Shown when hovering a character. If it's empty for a word, the second meaning field is used. Long meanings are cut at 120 characters. | `SimpleMeaning`, then `Definitions` |
 | Mature from | Interval in days from which a card counts as mature. | 21 days |
+| Mastered from | Interval in days from which a card counts as mastered (at least the mature value). | 90 days |
 
 The defaults fit the [Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi)
 "New HSK (2025)" deck. For other decks, pick your deck and its field names.

@@ -73,7 +73,7 @@ class Tile(NamedTuple):
     """One character in the grid."""
 
     char: str
-    status: int  # UNSEEN, LEARNING, YOUNG or MATURE
+    status: int  # UNSEEN, LEARNING, YOUNG, MATURE or MASTERED
     # Shown when hovering: the character's own note if the deck has one
     # (学 on its own), otherwise the lowest-level word containing it.
     # None if no word in the chosen decks contains the character.
@@ -89,16 +89,23 @@ UNSEEN = 0  # only new cards (or none)
 LEARNING = 1  # in (re)learning steps
 YOUNG = 2  # in review, interval below mature_days
 MATURE = 3  # in review, interval of mature_days or more
+MASTERED = 4  # in review, interval of mastered_days or more
 
 # Anki's card "type" column: 0 new, 1 learning, 2 review, 3 relearning.
 CARD_NEW, CARD_LEARN, CARD_REVIEW, CARD_RELEARN = 0, 1, 2, 3
 
 
-def card_status(card_type: int, interval: int, mature_days: int) -> int:
+def card_status(card_type: int, interval: int, mature_days: int, mastered_days: int) -> int:
+    # The interval is used rather than the number of reviews: every deck and
+    # both schedulers (SM-2 and FSRS) have one, and a card you keep
+    # forgetting gets many reviews without being well known. A forgotten
+    # card is in relearning, so it drops back to LEARNING.
     if card_type == CARD_NEW:
         return UNSEEN
     if card_type in (CARD_LEARN, CARD_RELEARN):
         return LEARNING
+    if interval >= max(mastered_days, mature_days):
+        return MASTERED
     return MATURE if interval >= mature_days else YOUNG
 
 
@@ -153,6 +160,7 @@ def collect(
     level_field: str,
     mature_days: int,
     decks: list[str] | None = None,
+    mastered_days: int = 90,
     official_levels: dict[str, tuple[int, str]] | None = None,
     pinyin_field: str = "",
     meaning_fields: list[str] | None = None,
@@ -183,7 +191,7 @@ def collect(
     note_card = {}  # note id -> (ord, card id) of the card to preview
     query = f"select id, nid, ord, type, ivl from cards {deck_filter(col, decks or [])}"
     for card_id, note_id, card_ord, card_type, interval in col.db.execute(query):
-        status = card_status(card_type, interval, mature_days)
+        status = card_status(card_type, interval, mature_days, mastered_days)
         note_status[note_id] = max(note_status.get(note_id, UNSEEN), status)
         note_card[note_id] = min(note_card.get(note_id, (card_ord, card_id)), (card_ord, card_id))
 
