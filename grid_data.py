@@ -85,26 +85,90 @@ class Tile(NamedTuple):
 
 # How well a character is known. A character takes the *best* status among
 # all the cards whose word contains it.
-UNSEEN = 0  # only new cards (or none)
-LEARNING = 1  # in (re)learning steps
+UNSEEN = 0  # never answered (new cards, or none)
+LEARNING = 1  # in (re)learning steps, or answered but never graduated
 YOUNG = 2  # in review, interval below mature_days
 MATURE = 3  # in review, interval of mature_days or more
-MASTERED = 4  # in review, interval of mastered_days or more
+MASTERED = 4  # interval of mastered_days or more, and MASTERED_REVIEWS
+#               reviews in a row answered correctly
+
+# Successful reviews in a row (since the last time you forgot the card)
+# needed for MASTERED. A long interval alone isn't enough: one review done
+# very late can give a card a 100+ day interval after only 2 or 3 answers.
+MASTERED_REVIEWS = 3
 
 # Anki's card "type" column: 0 new, 1 learning, 2 review, 3 relearning.
 CARD_NEW, CARD_LEARN, CARD_REVIEW, CARD_RELEARN = 0, 1, 2, 3
+# Anki's card "queue" column for suspended cards.
+QUEUE_SUSPENDED = -1
+
+# Anki's review log "type" column. LOG_MANUAL is "Set due date", "Forget"
+# and similar: the interval changed without you answering the card.
+# LOG_FILTERED is an answer in a filtered deck that doesn't reschedule.
+LOG_LEARN, LOG_REVIEW, LOG_RELEARN, LOG_FILTERED, LOG_MANUAL, LOG_RESCHEDULED = range(6)
 
 
-def card_status(card_type: int, interval: int, mature_days: int, mastered_days: int) -> int:
-    # The interval is used rather than the number of reviews: every deck and
-    # both schedulers (SM-2 and FSRS) have one, and a card you keep
-    # forgetting gets many reviews without being well known. A forgotten
-    # card is in relearning, so it drops back to LEARNING.
+class History(NamedTuple):
+    """What a card's review log says about how well you know it."""
+
+    answered: bool  # answered at least once (learning, review or relearning)
+    interval: int | None  # interval set by the last answer (or FSRS
+    #                       rescheduling); < 0 means seconds, i.e. still in
+    #                       learning steps; None if there's none
+    streak: int  # reviews in a row answered correctly (Hard, Good or Easy)
+
+
+def read_history(rows) -> History:
+    """Summarise one card's review log rows (type, ease, ivl), oldest first.
+
+    Manual changes ("Set due date") are skipped, so pushing a card 180 days
+    ahead doesn't make it mature. "Forget" (a manual change to interval 0)
+    starts the card over.
+    """
+    answered, interval, streak = False, None, 0
+    for log_type, ease, ivl in rows:
+        if log_type == LOG_MANUAL:
+            if ivl == 0:
+                answered, interval, streak = False, None, 0
+            continue
+        if log_type in (LOG_LEARN, LOG_REVIEW, LOG_RELEARN):
+            answered = True
+        if log_type in (LOG_LEARN, LOG_REVIEW, LOG_RELEARN, LOG_RESCHEDULED):
+            interval = ivl
+        if log_type == LOG_REVIEW:
+            streak = streak + 1 if ease > 1 else 0
+    return History(answered, interval, streak)
+
+
+def card_status(
+    card_type: int,
+    interval: int,
+    history: History | None,
+    mature_days: int,
+    mastered_days: int,
+) -> int:
+    """How well one card is known.
+
+    The interval decides young / mature / mastered, as in Anki's own stats,
+    but it's taken from your answers (the review log), not only from the
+    card: a card moved ahead with "Set due date" keeps the interval your
+    last answer gave it. `history` None means the card has no review log at
+    all (e.g. it was deleted); then the card's interval and nothing else is
+    used, and it can't become MASTERED.
+    """
     if card_type == CARD_NEW:
         return UNSEEN
     if card_type in (CARD_LEARN, CARD_RELEARN):
         return LEARNING
-    if interval >= max(mastered_days, mature_days):
+    streak = 0
+    if history is not None:
+        if not history.answered:
+            return UNSEEN  # put into review by hand, never answered
+        if history.interval is None or history.interval <= 0:
+            return LEARNING  # answered in learning, then moved by hand
+        interval = min(interval, history.interval)
+        streak = history.streak
+    if interval >= max(mastered_days, mature_days) and streak >= MASTERED_REVIEWS:
         return MASTERED
     return MATURE if interval >= mature_days else YOUNG
 
@@ -151,7 +215,7 @@ def deck_filter(col, decks: list[str]) -> str:
             raise ValueError(f'There is no deck called "{name}". Check the Hanzi Grid settings.')
         deck_ids.update(col.decks.deck_and_child_ids(deck_id))
     ids = ",".join(str(d) for d in deck_ids)
-    return f"where did in ({ids}) or odid in ({ids})"
+    return f"where (did in ({ids}) or odid in ({ids}))"
 
 
 def collect(
@@ -187,11 +251,26 @@ def collect(
     #    status. A note can have several cards (e.g. recognition + writing).
     #    Also remember one card per note to preview: its first card type
     #    (lowest `ord`), which is usually the "recognition" card.
+    #    Suspended cards are skipped: you've chosen not to study them (for
+    #    example a card with a mistake), so they don't colour a character.
+    #    Review cards also need their review log (see card_status).
+    card_filter = deck_filter(col, decks or [])
+    card_filter += f" {'and' if card_filter else 'where'} queue != {QUEUE_SUSPENDED}"
+    logs = {}  # card id -> [(type, ease, ivl), ...], oldest first
+    query = (
+        "select cid, type, ease, ivl from revlog where cid in "
+        f"(select id from cards {card_filter} and type = {CARD_REVIEW}) "
+        "order by cid, id"
+    )
+    for card_id, log_type, ease, ivl in col.db.execute(query):
+        logs.setdefault(card_id, []).append((log_type, ease, ivl))
+
     note_status = {}  # note id -> best status among its cards
     note_card = {}  # note id -> (ord, card id) of the card to preview
-    query = f"select id, nid, ord, type, ivl from cards {deck_filter(col, decks or [])}"
+    query = f"select id, nid, ord, type, ivl from cards {card_filter}"
     for card_id, note_id, card_ord, card_type, interval in col.db.execute(query):
-        status = card_status(card_type, interval, mature_days, mastered_days)
+        history = read_history(logs[card_id]) if card_id in logs else None
+        status = card_status(card_type, interval, history, mature_days, mastered_days)
         note_status[note_id] = max(note_status.get(note_id, UNSEEN), status)
         note_card[note_id] = min(note_card.get(note_id, (card_ord, card_id)), (card_ord, card_id))
 

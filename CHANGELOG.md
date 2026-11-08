@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.1 (2026-11-08)
+
+- Fix: cards moved with **Set due date** were shown as mature or mastered
+  without being reviewed. Statuses now use the interval your last answer
+  gave a card (from the review log); manual changes are ignored. A card put
+  into review that way without being answered counts as not studied.
+- Mastered now also needs the last 3 reviews answered correctly (since the
+  last time the card was forgotten), so one late review can't make a card
+  mastered after only 2 or 3 answers.
+- Suspended cards are ignored, so suspending a card (for example one with
+  a mistake) stops it colouring its characters or showing in the preview.
+
 ## 1.1.0 (2026-11-07)
 
 - New top status **mastered**: cards with an interval of 90 days or more

@@ -7,6 +7,6 @@ The easiest way to change these is the **⚙ Settings** button in the grid (the 
 - **pinyin_field**: name of the field with the pinyin, shown when hovering a character. `""` for none. Default: `"Pinyin"`.
 - **meaning_fields**: names of the fields with the meaning, shown when hovering a character. The first one that isn't empty is used. `[]` for none. Default: `["SimpleMeaning", "Definitions"]`.
 - **mature_days**: a card's interval (in days) from which it counts as "mature". Default: `21`, the same as Anki's own stats.
-- **mastered_days**: a card's interval (in days) from which it counts as "mastered", the top level. Can't be lower than **mature_days**. Default: `90` (about three months).
+- **mastered_days**: a card's interval (in days) from which it counts as "mastered", the top level, if its last 3 reviews were also answered correctly. Can't be lower than **mature_days**. Default: `90` (about three months).
 
 Changes apply the next time the grid opens.

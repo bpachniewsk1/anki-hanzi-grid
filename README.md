@@ -12,11 +12,18 @@ progress bar for each level.
 
   | Colour | Meaning |
   | --- | --- |
-  | outline | not studied yet (only new cards, or no card) |
+  | outline | not studied yet (never answered) |
   | yellow | learning / relearning |
   | light green | young (in review, interval under 21 days) |
   | dark green | mature (interval 21 days or more) |
-  | gold on deep green | mastered (interval 90 days or more) |
+  | gold on deep green | mastered (interval 90 days or more, and the last 3 reviews answered correctly) |
+
+  The interval is the one your last answer gave the card, so moving a card
+  with **Set due date** doesn't make it mature, and a card put into review
+  that way without being answered still counts as not studied. A forgotten
+  card drops back to learning; after that it needs 3 correct reviews in a
+  row again to be mastered. **Suspended cards are ignored**, so suspending
+  a card with a mistake stops it colouring its characters.
 
   A character takes the best colour among all cards whose word contains it,
   so 学 turns green once you know 学习 *or* 学生.
@@ -40,9 +47,9 @@ progress bar for each level.
 
 ## Install
 
-<!-- TODO after the AnkiWeb upload: replace the next line with
-"**From AnkiWeb:** in Anki, open **Tools → Add-ons → Get Add-ons…**, paste the code `<number>` and restart Anki." -->
-**From AnkiWeb:** coming soon.
+**From AnkiWeb:** in Anki, open **Tools → Add-ons → Get Add-ons…**, paste
+the code `967323486` and restart Anki
+([add-on page](https://ankiweb.net/shared/info/967323486)).
 
 **From a file:** download `hanzi_grid-<version>.ankiaddon` from the
 [Releases page](https://github.com/bpachniewsk1/anki-hanzi-grid/releases),
