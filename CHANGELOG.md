@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.2 (2026-11-08)
+
+- Repackaged: an early 1.1.1 package on AnkiWeb was missing the change
+  that ignores suspended cards. No other changes.
+
 ## 1.1.1 (2026-11-08)
 
 - Fix: cards moved with **Set due date** were shown as mature or mastered
