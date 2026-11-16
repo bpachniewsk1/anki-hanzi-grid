@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.4.1 (2026-11-16)
+
+- Measure words view: Find now searches by measure word, pinyin or gloss
+  (本, ben, books) and shows the whole block, or by word and hides the
+  rows and blocks with no match. Clearer layout: tinted headings, one row
+  per HSK level. The note explains that a word with several measure words
+  (狗: 只 or 条) appears under each.
+
 ## 1.4.0 (2026-11-16)
 
 - **Measure words view**: words grouped by the classifier they take

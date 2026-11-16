@@ -191,17 +191,24 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 .gp .todo { color: var(--fg-subtle, gray); font-style: italic; }
 .gcount { color: var(--fg-subtle, gray); font-size: .9em; margin: .2em 0 .5em; }
 
-/* The Measure words view: one collapsible block per measure word. */
-.mw { margin: .5em 0; border: 1px solid var(--border-subtle, #ddd); border-radius: 6px; }
-.mw.hide { display: none; }
-.mw summary { padding: .5em .8em; cursor: pointer; display: flex; align-items: center; gap: .6em; flex-wrap: wrap; }
+/* The Measure words view: one collapsible block per measure word, with
+   a tinted heading, and inside it one row per level. */
+.mw { margin: .8em 0; border: 1px solid var(--border-subtle, #ddd); border-radius: 8px; overflow: hidden; }
+.mw.hide, .lv.hide { display: none; }
+.mw summary {
+  padding: .55em .9em; cursor: pointer; display: flex; align-items: center; gap: .7em; flex-wrap: wrap;
+  background: var(--canvas-inset, #f1f1f1); border-left: 5px solid var(--fg-subtle, #999);
+}
+.mw[open] summary { border-bottom: 1px solid var(--border-subtle, #ddd); }
 .mw summary::-webkit-details-marker { display: none; }
-.mw summary .tile { font-size: 18px; height: 1.6em; min-width: 1.6em; flex: none; }
-.mw summary .hz { font-size: 22px; }
+.mw summary .tile { font-size: 20px; height: 1.6em; min-width: 1.6em; flex: none; }
+.mw summary .hz { font-size: 24px; font-weight: bold; }
 .mw summary .gloss { color: var(--fg-subtle, gray); font-size: .9em; }
 .mw summary .pat { color: var(--fg-subtle, gray); font-size: .9em; margin-left: auto; white-space: nowrap; }
-.mw .body { padding: .2em .9em .8em; border-top: 1px solid var(--border-subtle, #eee); }
-.mw .body h3 { margin: .8em 0 .3em; }
+.mw .body { padding: .3em .9em .6em; }
+.mw .bar { margin-top: .4em; }
+.lv { display: flex; align-items: flex-start; gap: .8em; padding: .35em 0; border-top: 1px dashed var(--border-subtle, #e3e3e3); }
+.lv .lvl { flex: none; width: 4.2em; padding-top: .45em; font-size: .85em; font-weight: bold; color: var(--fg-subtle, gray); }
 
 /* Status colours, shared by tiles and progress bars. */
 .s0 { border: 1px solid var(--border-subtle, #ccc); color: var(--fg-subtle, gray); }
@@ -285,6 +292,30 @@ find.addEventListener("input", () => {
     }
     return;
   }
+  if (view === "measure") {
+    // A measure word block matches by its heading (本, běn, "books"), and
+    // then shows all its words; otherwise only the words that match are
+    // shown, and empty rows and blocks are hidden.
+    const q = query.toLowerCase();
+    for (const block of document.querySelectorAll(".mw")) {
+      const head = block.querySelector("summary").textContent.toLowerCase();
+      const whole = !q || head.includes(q);
+      let any = false;
+      for (const row of block.querySelectorAll(".lv")) {
+        let rowAny = false;
+        for (const tile of row.querySelectorAll(".tile")) {
+          const match = whole || tile.textContent.includes(query);
+          tile.classList.toggle("hide", !match);
+          rowAny = rowAny || match;
+        }
+        row.classList.toggle("hide", !rowAny);
+        any = any || rowAny;
+      }
+      block.classList.toggle("hide", !any);
+      if (q && any) block.open = true;
+    }
+    return;
+  }
   for (const tile of document.querySelectorAll(".grid .tile")) {
     const text = tile.textContent;
     const match = !query || text.includes(query) || (view === "chars" && query.includes(text));
@@ -344,7 +375,8 @@ MEASURE_NOTE = (
     "Which measure word (classifier) each word takes, from <b>CC-CEDICT</b> "
     "(CC BY-SA 4.0). It marks mainly concrete nouns; a word that isn't listed "
     "usually takes 个. The tile in each heading is the measure word itself, "
-    "coloured by how well you know it."
+    "coloured by how well you know it. A word that takes several measure "
+    "words (狗: 只 or 条) is listed under each."
 )
 GRAMMAR_NOTE = (
     "Grammar points from the <b>Chinese Grammar Wiki</b> (AllSet Learning, "
@@ -638,7 +670,7 @@ def measure_html(grid: grid_data.Grid, config: dict) -> str:
                 parts.append(classifier_head(classifier, grid, config))
                 parts.append(f"<span class='pat'>{len(items)} words</span></summary><div class='body'>")
                 parts.append(progress(items))
-                parts.append("<div class='grid'>" + "".join(entry_tile_html(e, config) for e in items) + "</div>")
+                parts.append(level_row(label, items, config))
                 parts.append("</div></details>")
         return "".join(parts)
 
@@ -652,10 +684,16 @@ def measure_html(grid: grid_data.Grid, config: dict) -> str:
         parts.append(classifier_head(classifier, grid, config))
         parts.append(f"<span class='pat'>{len(items)} words{' · the general measure word' if general else ''}</span></summary><div class='body'>")
         parts.append(progress(items))
-        for label, group in levels:
-            parts.append(f"<h3>{escape(label)}</h3><div class='grid'>" + "".join(entry_tile_html(e, config) for e in group) + "</div>")
+        parts.extend(level_row(label, group, config) for label, group in levels)
         parts.append("</div></details>")
     return "".join(parts)
+
+
+def level_row(label: str, entries, config: dict) -> str:
+    """One row of a measure word block: the level on the left, its words
+    on the right."""
+    tiles = "".join(entry_tile_html(e, config) for e in entries)
+    return f"<div class='lv'><span class='lvl'>{escape(label)}</span><div class='grid'>{tiles}</div></div>"
 
 
 _grammar = None  # (index, points) once loaded
