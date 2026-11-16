@@ -18,9 +18,11 @@ freely licensed, so the exact level of a point there may differ.
 
 ## points.json
 
-Short notes for about 120 of those points: the pattern, an explanation and
+A short note for every point (496 in all): the pattern, an explanation and
 example sentences with pinyin and English, written for Hanzi Grid (not
 copied from the wiki) and licensed like the add-on, AGPL-3.0-or-later.
+The example sentences are simple, standard Mandarin, checked but not
+reviewed by a native speaker.
 The rule each note describes is the one in the linked wiki article; read
 the article for the full picture and more examples. Corrections welcome at
 https://github.com/bpachniewsk1/anki-hanzi-grid/issues .

@@ -31,7 +31,7 @@ it, with a progress bar for each level.
   list (or by your deck's word levels; see below). *Words* shows one tile
   per word, grouped by the words' own HSK levels, which is what the exam
   actually counts. *Grammar* lists the grammar points of each level (from
-  the Chinese Grammar Wiki, with links), many with a short note and
+  the Chinese Grammar Wiki, with links), each with a short note and
   example sentences; the tile next to each point shows how well you know
   its key character or word (过, 着, 的, 得, 地, 把, 被 …).
 - **Summary on the deck list:** one bar per level under Anki's deck list,
@@ -215,8 +215,7 @@ only reads your collection. The only thing it writes is its own settings, in
   are counted.
 - The Grammar view's levels follow the Chinese Grammar Wiki's bands (A1 =
   HSK 1 … C1 = HSK 6–9); the official HSK 3.0 grammar syllabus may place a
-  point differently. About 140 of the 495 points have notes so far; the
-  rest link to the wiki article.
+  point differently.
 - The preview window builds on internal parts of Anki's own previewer, so a
   future Anki version may need a small update.
 

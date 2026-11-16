@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.3.1 (2026-11-16)
+
+- Grammar view: every one of the 496 grammar points now has a note with a
+  pattern, an explanation and example sentences with pinyin (354 added).
+
 ## 1.3.0 (2026-11-16)
 
 - **Grammar view**: the grammar points of each level, from the Chinese
