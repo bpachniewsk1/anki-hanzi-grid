@@ -1,10 +1,12 @@
 {
   "decks": ["Anki xiehanzi"],
   "levels": "hsk3.1",
+  "view": "chars",
   "hanzi_fields": ["Simplified"],
   "level_field": "HskLevel",
   "pinyin_field": "Pinyin",
   "meaning_fields": ["SimpleMeaning", "Definitions"],
   "mature_days": 21,
-  "mastered_days": 90
+  "mastered_days": 90,
+  "weak_lapses": 3
 }

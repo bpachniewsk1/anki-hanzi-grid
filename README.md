@@ -1,8 +1,8 @@
 # Hanzi Grid
 
-An Anki add-on that shows every Chinese character in your decks on one
-screen, grouped by HSK level and coloured by how well you know it, with a
-progress bar for each level.
+An Anki add-on that shows every Chinese character, or every word, in your
+decks on one screen, grouped by HSK level and coloured by how well you know
+it, with a progress bar for each level.
 
 ![Hanzi Grid window](screenshots/grid.png)
 
@@ -27,17 +27,32 @@ progress bar for each level.
 
   A character takes the best colour among all cards whose word contains it,
   so 学 turns green once you know 学习 *or* 学生.
-- **Grouped by HSK level** (official HSK 3.1 character list, or worked out
-  from your deck's word levels; see below).
+- **Two views.** *Characters* groups by the official HSK 3.1 character
+  list (or by your deck's word levels; see below). *Words* shows one tile
+  per word, grouped by the words' own HSK levels, which is what the exam
+  actually counts.
 - **Progress bars** for each level and for all levels together, with
-  "studied", "mature" and "mastered" numbers.
-- **Hover a character** to see its pinyin and meaning.
-- **Click a character** to see the answer side of the cards of every word
-  that contains it, in Anki's own preview window. **Shift+click** to find
-  them in the Browser.
-- **Settings window** to choose decks, level source, fields and the mature
-  and mastered thresholds.
+  "studied", "mature" and "mastered" numbers, and **"+N this week"** for
+  what you started in the last 7 days.
+- **Hover** a tile to see its pinyin and meaning.
+- **Click a character** to open its page: every word that contains it,
+  grouped by level and coloured by status, with its own progress bar. Click
+  a word there, or in the Words view, to see the answer side of its card in
+  Anki's own preview window. **Shift+click** to find the cards in the
+  Browser.
+- **Next up:** under each level, the first characters or words you haven't
+  studied yet, in deck order.
+- **Weak marks:** a red dot on tiles you keep forgetting (3 lapses or more;
+  adjustable).
+- **Show** filter (not studied, in progress, mature+, weak) and a **Find**
+  box.
+- **Settings window** to choose decks, level source, fields and the mature,
+  mastered and weak thresholds.
 - **Read-only:** the add-on never changes your cards or notes.
+
+![Words view: one tile per word, grouped by HSK level](screenshots/words.png)
+
+![Character page for 学: its 52 words by level](screenshots/character.png)
 
 ![Hovering 几 shows jǐ, how much/many?](screenshots/hover.png)
 
@@ -76,12 +91,18 @@ Once it's installed:
 2. Hover a character to see its pinyin, meaning and status. They come from
    the character's own card (学) if your decks have one, otherwise from the
    lowest-level word that uses it (学生, with 学 highlighted).
-3. Click a character: a preview window shows the answer side of the card
-   of its first word. Press **>** (or Right arrow) for the next word,
-   **<** (or Left arrow) to go back.
-4. Shift+click a character to open the Browser with all those cards.
-5. Use the **Levels** buttons to switch where levels come from, and
-   **⚙ Settings** for everything else.
+3. Click a character to open its page: all the words that contain it, by
+   level. Click a word there to preview the answer side of its card; press
+   **>** (or Right arrow) for the next word, **<** (or Left arrow) to go
+   back. **Open all cards** steps through every word. Esc closes the page.
+4. Switch to **Words** with the View buttons: one tile per word, grouped
+   by the words' HSK levels. Click a word to preview its card.
+5. Shift+click any tile to open the Browser with its cards.
+6. Use **Show** to see only what you haven't studied, what's in progress,
+   what's mature, or what's weak, and **Find** to look for a character or
+   word (typing 学生 in the Characters view shows 学 and 生).
+7. Use the **Levels** buttons to switch where character levels come from,
+   and **⚙ Settings** for everything else.
 
 Colours are worked out each time the grid opens, so reopen it after
 reviewing.
@@ -103,6 +124,7 @@ Click **⚙ Settings** in the grid, or select Hanzi Grid in
 | Meaning field | Shown when hovering a character. If it's empty for a word, the second meaning field is used. Long meanings are cut at 120 characters. | `SimpleMeaning`, then `Definitions` |
 | Mature from | Interval in days from which a card counts as mature. | 21 days |
 | Mastered from | Interval in days from which a card counts as mastered (at least the mature value). | 90 days |
+| Weak from | How often you must have forgotten a card (lapses) for its tile to get a red dot. | 3 lapses |
 
 The defaults fit the [Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi)
 "New HSK (2025)" deck. For other decks, pick your deck and its field names.
@@ -175,7 +197,8 @@ only reads your collection. The only thing it writes is its own settings, in
 ## Known limits
 
 - Only simplified characters are counted (whatever the word field holds).
-- Suspended cards still count with the status they had when suspended.
+- Word levels always come from the notes' level field; the official HSK
+  lists bundled with the add-on only cover characters.
 - Only one word field can be picked in Settings (the stored setting accepts
   a list).
 - In the Settings deck list, subdecks of a ticked deck show as unticked but

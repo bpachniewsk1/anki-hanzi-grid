@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.2.0 (2026-11-16)
+
+- **Words view**: one tile per word, grouped by the words' HSK levels,
+  with the same colours, progress bars and hover boxes. Switch with the
+  View buttons (config key `view`).
+- **Character page**: clicking a character now opens a page with every
+  word that contains it, grouped by level and coloured by status, with a
+  progress bar, "Open all cards" and "Find in Browser". Click a word to
+  preview its card.
+- **"+N this week"** in the progress lines: characters or words first
+  answered in the last 7 days.
+- **Next up** under each level: the first unstudied characters or words,
+  in deck order.
+- **Weak marks**: a red dot on tiles forgotten 3 or more times ("Weak
+  from" in Settings, config key `weak_lapses`); the hover box says how
+  often.
+- **Show** filter (not studied, in progress, mature+, weak) and a **Find**
+  box.
+- Shift+click a word to find it in the Browser.
+
 ## 1.1.2 (2026-11-08)
 
 - Repackaged: an early 1.1.1 package on AnkiWeb was missing the change

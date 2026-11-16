@@ -28,11 +28,12 @@ class CharPreviewer(MultiCardPreviewer):
     > (or Right arrow) goes to the next word, < (or Left arrow) back.
     """
 
-    def __init__(self, char: str, card_ids: list[int], on_close) -> None:
+    def __init__(self, char: str, card_ids: list[int], on_close, index: int = 0) -> None:
         super().__init__(parent=None, mw=mw, on_close=on_close)
-        self.char = char
+        self.char = char  # shown in the title: a character, or a word
         self.card_ids = card_ids
-        self.index = 0  # which card in card_ids is showing
+        # Which card in card_ids is showing (the panel can start mid-list).
+        self.index = min(max(index, 0), len(card_ids) - 1)
         self.last_shown = None
 
     # --- The two methods every previewer must have -------------------------

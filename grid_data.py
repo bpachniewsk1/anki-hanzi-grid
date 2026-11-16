@@ -69,8 +69,20 @@ class Word(NamedTuple):
     meaning: str  # e.g. student ("" if there's no meaning field)
 
 
+class Entry(NamedTuple):
+    """One word (note) in the chosen decks: a tile in the Words view."""
+
+    word: Word
+    status: int  # UNSEEN … MASTERED, the best among the note's cards
+    level: int | None  # from the note's HSK level field, e.g. 3
+    label: str  # that field's text, e.g. "HSK 3" ("" if none)
+    card_id: int  # the card to preview (the note's first card type)
+    lapses: int  # how often you forgot it (most among the note's cards)
+    studied_at: int | None  # time of your first answer, in ms (None: never)
+
+
 class Tile(NamedTuple):
-    """One character in the grid."""
+    """One character in the Characters view."""
 
     char: str
     status: int  # UNSEEN, LEARNING, YOUNG, MATURE or MASTERED
@@ -81,6 +93,21 @@ class Tile(NamedTuple):
     # The lowest-level word containing the character ("" if none). With
     # levels from the deck, this is the word that set the level.
     level_word: str
+    # Positions in Grid.entries of every word containing the character:
+    # the character's own word first, then by level, then in deck order.
+    words: tuple[int, ...]
+    lapses: int  # most lapses among those words
+    lapsed_word: str  # the word with that many lapses ("" if none)
+    studied_at: int | None  # earliest first answer among those words
+
+
+class Grid(NamedTuple):
+    """Everything the grid window shows. Built by collect()."""
+
+    chars: list[tuple[str, list[Tile]]]  # [(level label, tiles), ...]
+    words: list[tuple[str, list[Entry]]]  # [(level label, entries), ...]
+    entries: list[Entry]  # every word, in deck order
+    tiles: dict[str, Tile]  # character -> its tile
 
 
 # How well a character is known. A character takes the *best* status among
@@ -228,23 +255,20 @@ def collect(
     official_levels: dict[str, tuple[int, str]] | None = None,
     pinyin_field: str = "",
     meaning_fields: list[str] | None = None,
-):
-    """Return (groups, char_cards).
+) -> Grid:
+    """Read the collection and build the Grid (see the Grid class).
 
-    Where levels come from:
+    Where character levels come from:
       - official_levels given (from load_level_lists): each character's
         level comes from the official list. Characters on the list that
         aren't in the deck are shown too (never studied).
       - official_levels None: a character's level is the lowest level of
         any word in the deck that contains it.
+    Word levels always come from the notes' level field: the official
+    lists only cover characters.
 
-    groups: [(label, [Tile, ...]), ...]
-        HSK levels in order, then "Other" for studied characters with no
-        level. See Tile for what each character carries.
-    char_cards: {char: [card id, ...]}
-        One card per word containing the character, for the previewer: the
-        character's own word first (学 for 学), then by level, then in deck
-        order.
+    Both views list HSK levels in order, then "Other": characters with no
+    level that you have studied, and words with no level.
     """
 
     # 1. Read the cards (only those in `decks`) and keep each note's best
@@ -265,14 +289,30 @@ def collect(
     for card_id, log_type, ease, ivl in col.db.execute(query):
         logs.setdefault(card_id, []).append((log_type, ease, ivl))
 
+    # When each card was first answered (revlog ids are timestamps in ms).
+    # Manual changes don't count, so a card moved with "Set due date"
+    # isn't "studied this week".
+    query = (
+        "select cid, min(id) from revlog where type in "
+        f"({LOG_LEARN}, {LOG_REVIEW}, {LOG_RELEARN}) and cid in "
+        f"(select id from cards {card_filter}) group by cid"
+    )
+    first_answer = dict(col.db.execute(query))  # card id -> ms
+
     note_status = {}  # note id -> best status among its cards
     note_card = {}  # note id -> (ord, card id) of the card to preview
-    query = f"select id, nid, ord, type, ivl from cards {card_filter}"
-    for card_id, note_id, card_ord, card_type, interval in col.db.execute(query):
+    note_lapses = {}  # note id -> most lapses among its cards
+    note_studied = {}  # note id -> earliest first answer (ms)
+    query = f"select id, nid, ord, type, ivl, lapses from cards {card_filter}"
+    for card_id, note_id, card_ord, card_type, interval, lapses in col.db.execute(query):
         history = read_history(logs[card_id]) if card_id in logs else None
         status = card_status(card_type, interval, history, mature_days, mastered_days)
         note_status[note_id] = max(note_status.get(note_id, UNSEEN), status)
         note_card[note_id] = min(note_card.get(note_id, (card_ord, card_id)), (card_ord, card_id))
+        note_lapses[note_id] = max(note_lapses.get(note_id, 0), lapses)
+        if card_id in first_answer:
+            when = first_answer[card_id]
+            note_studied[note_id] = min(note_studied.get(note_id, when), when)
 
     # 2. For each note type, find the position of the word field(s), the
     #    level field, the pinyin field and the meaning field(s). Notes store
@@ -294,14 +334,15 @@ def collect(
             )
 
     # 3. Read the notes straight from the database (much faster than loading
-    #    10,000 Note objects), skipping notes with no card in the deck. For
-    #    each character, keep its best status, the lowest HSK level of any
-    #    word it appears in, and that word.
+    #    10,000 Note objects), skipping notes with no card in the deck. Each
+    #    note becomes an Entry. For each character, keep its best status,
+    #    the lowest HSK level of any word it appears in, and that word.
+    entries: list[Entry] = []
     char_status = {}  # character -> best status
     char_level = {}  # character -> (level number, label like "HSK 3", Word)
     first_word = {}  # character -> first Word it appeared in (for "Other")
     own_word = {}  # character -> its own note's Word (学 for 学), if any
-    char_cards = {}  # character -> [(sort key, card id), ...]
+    char_words = {}  # character -> [(sort key, entry position), ...]
     rows = col.db.execute("select id, mid, flds from notes order by id")
     for position, (note_id, notetype_id, fields) in enumerate(rows):
         if note_id not in note_status or notetype_id not in positions:
@@ -323,6 +364,19 @@ def collect(
             if number:
                 level = int(number.group())
 
+        index = len(entries)
+        entries.append(
+            Entry(
+                word,
+                note_status[note_id],
+                level,
+                label,
+                note_card[note_id][1],
+                note_lapses[note_id],
+                note_studied.get(note_id),
+            )
+        )
+
         chars = set()
         for pos in word_pos:
             chars.update(HANZI.findall(strip_html(values[pos])))
@@ -335,7 +389,7 @@ def collect(
                 if char not in char_level or level < char_level[char][0]:
                     char_level[char] = (level, label, word)
             sort_key = (text != char, level if level is not None else 99, position)
-            char_cards.setdefault(char, []).append((sort_key, note_card[note_id][1]))
+            char_words.setdefault(char, []).append((sort_key, index))
 
     # 4. Choose the level of each character: from the official list, or
     #    from the deck's words (step 3).
@@ -351,18 +405,48 @@ def collect(
     in_order = list(first_word) + [c for c in levels if c not in first_word]
     groups = {}  # level number -> (label, [tiles])
     other = []
+    tiles = {}
     for char in in_order:
         status = char_status.get(char, UNSEEN)
         lowest = char_level[char][2] if char in char_level else first_word.get(char)
-        tile = Tile(char, status, own_word.get(char) or lowest, lowest.text if lowest else "")
+        words = tuple(i for _, i in sorted(char_words.get(char, [])))
+        lapses, lapsed_word, studied_at = 0, "", None
+        for i in words:
+            entry = entries[i]
+            if entry.lapses > lapses:
+                lapses, lapsed_word = entry.lapses, entry.word.text
+            if entry.studied_at is not None:
+                studied_at = min(studied_at or entry.studied_at, entry.studied_at)
+        tile = Tile(
+            char,
+            status,
+            own_word.get(char) or lowest,
+            lowest.text if lowest else "",
+            words,
+            lapses,
+            lapsed_word,
+            studied_at,
+        )
+        tiles[char] = tile
         if char in levels:
             level, label = levels[char]
             groups.setdefault(level, (label, []))[1].append(tile)
         elif status > UNSEEN:
             other.append(tile)
-
-    result = [groups[level] for level in sorted(groups)]
+    char_groups = [groups[level] for level in sorted(groups)]
     if other:
-        result.append(("Other", other))
-    cards = {char: [cid for _, cid in sorted(items)] for char, items in char_cards.items()}
-    return result, cards
+        char_groups.append(("Other", other))
+
+    # 6. The same for words, by their own level field, in deck order.
+    groups = {}
+    other = []
+    for entry in entries:
+        if entry.level is not None:
+            groups.setdefault(entry.level, (entry.label, []))[1].append(entry)
+        else:
+            other.append(entry)
+    word_groups = [groups[level] for level in sorted(groups)]
+    if other:
+        word_groups.append(("Other", other))
+
+    return Grid(char_groups, word_groups, entries, tiles)

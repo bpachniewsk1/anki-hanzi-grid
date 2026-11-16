@@ -131,6 +131,13 @@ class SettingsDialog(QDialog):
         self.mastered_days.setValue(config.get("mastered_days", 90))
         form.addRow("Mastered from:", self.mastered_days)
 
+        # --- Weak: how often you must have forgotten a card ---------------
+        self.weak_lapses = QSpinBox()
+        self.weak_lapses.setRange(1, 1000)
+        self.weak_lapses.setSuffix(" lapses")
+        self.weak_lapses.setValue(config.get("weak_lapses", 3))
+        form.addRow("Weak from:", self.weak_lapses)
+
         # --- Save / Cancel -------------------------------------------------
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
@@ -139,7 +146,7 @@ class SettingsDialog(QDialog):
         qconnect(buttons.rejected, self.reject)
         form.addRow(buttons)
 
-        self.resize(460, 630)
+        self.resize(460, 660)
 
     def accept(self) -> None:
         """Save was clicked: copy the widgets' values into the config."""
@@ -158,6 +165,7 @@ class SettingsDialog(QDialog):
         self.config["mature_days"] = self.mature_days.value()
         # Mastered can't come before mature.
         self.config["mastered_days"] = max(self.mastered_days.value(), self.mature_days.value())
+        self.config["weak_lapses"] = self.weak_lapses.value()
 
         super().accept()  # closes the dialog
         self.on_save(self.config)  # __init__.py saves it and rebuilds the grid
