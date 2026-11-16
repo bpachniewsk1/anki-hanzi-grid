@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 (2026-11-16)
+
+- **Modern look** (default): flat rounded tiles, borderless buttons and
+  cards, a fresher green scale (amber → mint → emerald → deep green with
+  gold), the same in the deck-list summary. The original look is still
+  there as **Classic**: Settings → Look (config key `theme`).
+
 ## 1.4.1 (2026-11-16)
 
 - Measure words view: Find now searches by measure word, pinyin or gloss

@@ -59,7 +59,7 @@ def field_name(box: QComboBox) -> str:
 
 
 class SettingsDialog(QDialog):
-    def __init__(self, config: dict, levels_choices, on_save) -> None:
+    def __init__(self, config: dict, levels_choices, theme_choices, on_save) -> None:
         super().__init__(mw)
         self.config = config
         self.on_save = on_save  # called with the new config after Save
@@ -139,6 +139,14 @@ class SettingsDialog(QDialog):
         self.weak_lapses.setValue(config.get("weak_lapses", 3))
         form.addRow("Weak from:", self.weak_lapses)
 
+        # --- Look --------------------------------------------------------
+        # addItem(text, data): the text is shown, the data is what we save.
+        self.theme = QComboBox()
+        for value, text in theme_choices:
+            self.theme.addItem(text, value)
+        self.theme.setCurrentIndex(max(0, self.theme.findData(config.get("theme", "modern"))))
+        form.addRow("Look:", self.theme)
+
         # --- Deck list summary --------------------------------------------
         self.deck_widget = QCheckBox("Show a progress summary on the deck list")
         self.deck_widget.setChecked(bool(config.get("deck_widget", True)))
@@ -152,7 +160,7 @@ class SettingsDialog(QDialog):
         qconnect(buttons.rejected, self.reject)
         form.addRow(buttons)
 
-        self.resize(460, 690)
+        self.resize(460, 720)
 
     def accept(self) -> None:
         """Save was clicked: copy the widgets' values into the config."""
@@ -173,6 +181,7 @@ class SettingsDialog(QDialog):
         self.config["mastered_days"] = max(self.mastered_days.value(), self.mature_days.value())
         self.config["weak_lapses"] = self.weak_lapses.value()
         self.config["deck_widget"] = self.deck_widget.isChecked()
+        self.config["theme"] = self.theme.currentData()
 
         super().accept()  # closes the dialog
         self.on_save(self.config)  # __init__.py saves it and rebuilds the grid

@@ -18,6 +18,7 @@ How the add-on is split up
 - previewer.py  the card preview window (built on Anki's own previewer).
 - deck_widget.py the small progress summary on Anki's deck list.
 - settings.py   the Settings window (decks, level source, fields …).
+- themes.py     the Classic and Modern looks (colours and shapes).
 - data/hsk3.1/  the official HSK 3.1 character lists (see SOURCE.md there).
 - data/grammar/ the grammar points and notes for the Grammar view.
 - data/classifiers/ which measure word each word takes (Measure words view).
@@ -43,7 +44,7 @@ from aqt.webview import AnkiWebView
 
 # A relative import: Anki loaded this folder as a package, so we can import
 # our other file from it.
-from . import deck_widget, grid_data
+from . import deck_widget, grid_data, themes
 from .previewer import CharPreviewer
 from .settings import SettingsDialog, selected_decks
 
@@ -381,7 +382,7 @@ MEASURE_NOTE = (
 GRAMMAR_NOTE = (
     "Grammar points from the <b>Chinese Grammar Wiki</b> (AllSet Learning, "
     "CC BY-NC-SA 4.0), grouped by the HSK levels the wiki aligns its bands to. "
-    "Each point links to its article; many have a short note with examples "
+    "Each point links to its article and has a short note with examples "
     "written for Hanzi Grid. The coloured tile shows how well you know the "
     "point's key character or word in your decks; hover it for pinyin and "
     "meaning, click it to find its cards."
@@ -831,7 +832,7 @@ class HanziGridDialog(QDialog):
             build_html(grid, config),
             css=[],
             js=[],
-            head=f"<style>{CSS}</style>",
+            head=f"<style>{CSS}{themes.theme(config)['css']}</style>",
             context=self,
         )
         self.show()
@@ -956,7 +957,7 @@ def save_config(config: dict) -> None:
 
 def open_settings() -> None:
     config = mw.addonManager.getConfig(__name__)
-    SettingsDialog(config, LEVEL_CHOICES, on_save=save_config).exec()
+    SettingsDialog(config, LEVEL_CHOICES, themes.THEME_CHOICES, on_save=save_config).exec()
 
 
 def collect(config: dict) -> grid_data.Grid:

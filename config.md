@@ -13,5 +13,6 @@ The easiest way to change these is the **⚙ Settings** button in the grid (the 
 
 - **weak_lapses**: how often you must have forgotten a card (Anki's lapses count) for it to get a red "weak" dot. Default: `3`.
 - **deck_widget**: `true` shows a small progress summary (one bar per level) under the deck list on Anki's main screen, with an Open link. Default: `true`.
+- **theme**: the look of the grid, `"modern"` (softer, rounder) or `"classic"` (the original). Settings → Look. Default: `"modern"`.
 
 Changes apply the next time the grid opens.

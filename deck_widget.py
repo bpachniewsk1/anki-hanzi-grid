@@ -24,7 +24,7 @@ from html import escape
 from aqt import gui_hooks, mw
 from aqt.operations import QueryOp
 
-from . import grid_data
+from . import grid_data, themes
 
 # Set by setup(): the functions from __init__.py we need.
 _open_grid = None
@@ -34,12 +34,7 @@ _collect = None  # collect(config) -> Grid, run in a background thread
 _cache: dict = {"key": None, "html": ""}
 _building = False
 
-STATUS_COLOURS = {
-    grid_data.LEARNING: "#f2c14e",
-    grid_data.YOUNG: "#9fd59a",
-    grid_data.MATURE: "#2f8f57",
-    grid_data.MASTERED: "#17472c",
-}
+STATUSES = (grid_data.LEARNING, grid_data.YOUNG, grid_data.MATURE, grid_data.MASTERED)
 
 # All class names start with "hg-" so they can't clash with Anki's own
 # styles or with other add-ons on the same page.
@@ -56,6 +51,8 @@ CSS = """
 .hg-widget .hg-bar div { height: 100%; }
 .hg-widget .hg-num { color: var(--fg-subtle, gray); }
 .hg-widget .hg-week { color: #2f8f57; font-weight: bold; }
+.hg-widget.hg-modern .hg-bar { height: 7px; }
+.hg-widget.hg-modern .hg-week { color: #047857; }
 """
 
 
@@ -130,11 +127,13 @@ def widget_html(grid: grid_data.Grid, config: dict, now_ms: int | None = None) -
     now_ms = now_ms if now_ms is not None else int(time.time() * 1000)
     words = config.get("view", "chars") == "words"
     groups = grid.words if words else grid.chars
+    colours = themes.theme(config)["colours"]
+    modern = config.get("theme", "modern") == "modern"
     rows = []
     total_week = 0
     for label, items in groups:
         total = len(items)
-        counts = {s: 0 for s in STATUS_COLOURS}
+        counts = {s: 0 for s in STATUSES}
         week = 0
         for item in items:
             if item.status in counts:
@@ -145,8 +144,8 @@ def widget_html(grid: grid_data.Grid, config: dict, now_ms: int | None = None) -
         studied = sum(counts.values())
         mature = counts[grid_data.MATURE] + counts[grid_data.MASTERED]
         bar = "".join(
-            f"<div style='width:{100 * counts[s] / total if total else 0:.2f}%;background:{colour}'></div>"
-            for s, colour in reversed(list(STATUS_COLOURS.items()))
+            f"<div style='width:{100 * counts[s] / total if total else 0:.2f}%;background:{colours[s]}'></div>"
+            for s in reversed(STATUSES)
         )
         rows.append(
             f"<tr><td>{escape(label)}</td><td><div class='hg-bar'>{bar}</div></td>"
@@ -155,7 +154,7 @@ def widget_html(grid: grid_data.Grid, config: dict, now_ms: int | None = None) -
     week_text = f" <span class='hg-week'>+{total_week} this week</span>" if total_week else ""
     what = "words" if words else "characters"
     return (
-        f"<div class='hg-widget'><style>{CSS}</style>"
+        f"<div class='hg-widget{' hg-modern' if modern else ''}'><style>{CSS}</style>"
         f"<div class='hg-head'><b>Hanzi Grid</b> · {what}{week_text}"
         "<a href='#' onclick=\"pycmd('hanzi_grid:open'); return false;\">Open</a></div>"
         f"<table>{''.join(rows)}</table></div>"
