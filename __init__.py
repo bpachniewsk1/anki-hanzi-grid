@@ -16,8 +16,10 @@ How the add-on is split up
 - __init__.py   (this file) adds the menu item, runs grid_data in the
                 background, and shows the result in a window.
 - previewer.py  the card preview window (built on Anki's own previewer).
+- deck_widget.py the small progress summary on Anki's deck list.
 - settings.py   the Settings window (decks, level source, fields …).
 - data/hsk3.1/  the official HSK 3.1 character lists (see SOURCE.md there).
+- data/grammar/ the grammar points and notes for the Grammar view.
 - config.json   default settings; you can edit them under
                 Tools > Add-ons > Hanzi Grid > Config. config.md is the help
                 text Anki shows next to that editor.
@@ -35,12 +37,12 @@ from anki.collection import SearchNode
 from aqt import mw
 from aqt.operations import QueryOp
 from aqt.qt import QAction, QDialog, QVBoxLayout, qconnect
-from aqt.utils import disable_help_button, restoreGeom, saveGeom, showWarning, tooltip
+from aqt.utils import disable_help_button, openLink, restoreGeom, saveGeom, showWarning, tooltip
 from aqt.webview import AnkiWebView
 
 # A relative import: Anki loaded this folder as a package, so we can import
 # our other file from it.
-from . import grid_data
+from . import deck_widget, grid_data
 from .previewer import CharPreviewer
 from .settings import SettingsDialog, selected_decks
 
@@ -51,12 +53,16 @@ DATA_FOLDER = os.path.join(os.path.dirname(__file__), "data", "hsk3.1")
 OFFICIAL = "hsk3.1"
 FROM_DECK = "deck"
 
-# The two views (config key "view").
+# The three views (config key "view").
 CHARS = "chars"
 WORDS = "words"
+GRAMMAR = "grammar"
 
-# "Studied this week" means first answered in the last 7 days.
-WEEK_MS = 7 * 24 * 60 * 60 * 1000
+# The grammar notes (see data/grammar/SOURCE.md).
+GRAMMAR_FOLDER = os.path.join(os.path.dirname(__file__), "data", "grammar")
+WIKI_URL = "https://resources.allsetlearning.com/chinese/grammar/"
+
+WEEK_MS = grid_data.WEEK_MS
 
 # How many "Next up" tiles to show under each level.
 NEXT_UP = 12
@@ -160,6 +166,26 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 }
 #panel .mn { font-size: 15px; }
 
+/* The Grammar view: one collapsible block per grammar point. */
+.gp { margin: .25em 0; border: 1px solid var(--border-subtle, #ddd); border-radius: 6px; max-width: 52em; }
+.gp.hide { display: none; }
+.gp summary { padding: .4em .7em; cursor: pointer; display: flex; align-items: center; gap: .6em; }
+.gp summary::-webkit-details-marker { display: none; }
+.gp summary .tile { font-size: 16px; height: 1.6em; min-width: 1.6em; flex: none; }
+.gp summary .tile.w { font-size: 14px; }
+.gp summary .none { width: 1.6em; height: 1.6em; flex: none; }
+.gp summary .pat { color: var(--fg-subtle, gray); font-size: .9em; margin-left: auto; white-space: nowrap; }
+.gp .body { padding: .2em .9em .8em 1.1em; border-top: 1px solid var(--border-subtle, #eee); }
+.gp .body p { margin: .5em 0; max-width: 46em; }
+.gp table { border-collapse: collapse; margin: .4em 0; }
+.gp td { padding: .15em .9em .15em 0; vertical-align: top; }
+.gp td.zh { font-size: 19px; font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; white-space: nowrap; }
+.gp td.py { color: var(--fg-subtle, gray); white-space: nowrap; }
+.gp .links { margin-top: .4em; font-size: .9em; }
+.gp .links a { margin-right: 1em; cursor: pointer; color: var(--fg-link, #0a66c2); text-decoration: underline; }
+.gp .todo { color: var(--fg-subtle, gray); font-style: italic; }
+.gcount { color: var(--fg-subtle, gray); font-size: .9em; margin: .2em 0 .5em; }
+
 /* Status colours, shared by tiles and progress bars. */
 .s0 { border: 1px solid var(--border-subtle, #ccc); color: var(--fg-subtle, gray); }
 .s1 { background: #f2c14e; color: #222; }
@@ -229,15 +255,31 @@ document.addEventListener("click", (event) => {
 
 // The Find box: show only the tiles whose text contains what you typed.
 // In the Characters view, typing a word (学生) also shows its characters.
+// In the Grammar view it searches the titles, patterns and key words.
 const find = document.getElementById("find");
 find.addEventListener("input", () => {
   const query = find.value.trim();
-  const charsView = document.body.dataset.view === "chars";
+  const view = document.body.dataset.view;
+  if (view === "grammar") {
+    const q = query.toLowerCase();
+    for (const point of document.querySelectorAll(".gp")) {
+      const text = point.querySelector("summary").textContent.toLowerCase();
+      point.classList.toggle("hide", !!q && !text.includes(q));
+    }
+    return;
+  }
   for (const tile of document.querySelectorAll(".grid .tile")) {
     const text = tile.textContent;
-    const match = !query || text.includes(query) || (charsView && query.includes(text));
+    const match = !query || text.includes(query) || (view === "chars" && query.includes(text));
     tile.classList.toggle("hide", !match);
   }
+});
+
+// Expand / collapse every grammar point.
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-open]");
+  if (!button) return;
+  for (const point of document.querySelectorAll(".gp")) point.open = button.dataset.open === "1";
 });
 """
 
@@ -246,6 +288,7 @@ find.addEventListener("input", () => {
 VIEW_CHOICES = [
     (CHARS, "Characters"),
     (WORDS, "Words"),
+    (GRAMMAR, "Grammar"),
 ]
 LEVEL_CHOICES = [
     (OFFICIAL, "Official HSK 3.1 list"),
@@ -275,6 +318,14 @@ WORD_LEVEL_NOTE = (
     "Word levels come from each note's HSK level field. Words without one "
     "are listed under Other."
 )
+GRAMMAR_NOTE = (
+    "Grammar points from the <b>Chinese Grammar Wiki</b> (AllSet Learning, "
+    "CC BY-NC-SA 4.0), grouped by the HSK levels the wiki aligns its bands to. "
+    "Each point links to its article; many have a short note with examples "
+    "written for Hanzi Grid. The coloured tile shows how well you know the "
+    "point's key character or word in your decks; hover it for pinyin and "
+    "meaning, click it to find its cards."
+)
 CLICK_HINTS = {
     CHARS: (
         "Hover a character for its pinyin and meaning. Click it to see every "
@@ -286,6 +337,7 @@ CLICK_HINTS = {
         "side of its card; Shift+click to open the Browser. A red dot marks "
         "words you keep forgetting."
     ),
+    GRAMMAR: "Click a grammar point to open it. Use Find to search by word or pattern.",
 }
 
 
@@ -438,18 +490,28 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("</div>")
 
     parts.append("<div class='tools'>")
-    parts.append("<span class='label'>Show:</span>")
-    for value, text in SHOW_CHOICES:
-        on = " on" if value == "all" else ""
-        parts.append(f"<span class='pill{on}' data-show='{value}'>{text}</span>")
-    parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='学 or 学生'>")
+    if view == GRAMMAR:
+        parts.append("<span class='pill' data-open='1'>Expand all</span><span class='pill' data-open='0'>Collapse all</span>")
+        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='过, 把, de, if …'>")
+    else:
+        parts.append("<span class='label'>Show:</span>")
+        for value, text in SHOW_CHOICES:
+            on = " on" if value == "all" else ""
+            parts.append(f"<span class='pill{on}' data-show='{value}'>{text}</span>")
+        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='学 or 学生'>")
     parts.append("</div>")
 
     deck_text = ", ".join(escape(d) for d in decks) if decks else "all decks"
-    level_note = LEVEL_NOTES[levels] if view == CHARS else WORD_LEVEL_NOTE
+    level_note = {CHARS: LEVEL_NOTES[levels], WORDS: WORD_LEVEL_NOTE, GRAMMAR: GRAMMAR_NOTE}[view]
     parts.append(
         f"<p class='note'>Decks: <b>{deck_text}</b><br>{level_note}<br>{CLICK_HINTS[view]}</p>"
     )
+
+    if view == GRAMMAR:
+        parts.append(grammar_html(grid, config))
+        parts.append("<div id='tip'></div>")
+        parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
+        return "".join(parts)
 
     if view == CHARS:
         groups = grid.chars
@@ -491,6 +553,77 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("<div id='tip'></div>")
     # The Find box behaves differently per view (see JS).
     parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
+    return "".join(parts)
+
+
+_grammar = None  # (index, points) once loaded
+
+
+def load_grammar():
+    """The grammar points (index.json) and notes (points.json)."""
+    global _grammar
+    if _grammar is None:
+        with open(os.path.join(GRAMMAR_FOLDER, "index.json"), encoding="utf-8") as file:
+            index = json.load(file)
+        with open(os.path.join(GRAMMAR_FOLDER, "points.json"), encoding="utf-8") as file:
+            points = {k: v for k, v in json.load(file).items() if not k.startswith("_")}
+        _grammar = (index, points)
+    return _grammar
+
+
+def key_tile_html(key: str, grid: grid_data.Grid, config: dict) -> str:
+    """The coloured tile for a grammar point's key character or word: its
+    status in your decks, with the usual hover box and click."""
+    if not key:
+        return "<span class='none'></span>"
+    tile = grid.tiles.get(key)
+    if tile is not None:
+        return char_tile_html(tile, grid, config)
+    entry = next((e for e in grid.entries if e.word.text == key), None)
+    if entry is not None:
+        return entry_tile_html(entry, config)
+    # Not in the decks at all: a plain grey tile.
+    return f"<span class='tile s0 w'>{escape(key)}</span>"
+
+
+def grammar_html(grid: grid_data.Grid, config: dict) -> str:
+    """The Grammar view: every point by level, as collapsible blocks."""
+    index, points = load_grammar()
+    # Notes with their own url and level (not in the wiki index) join the
+    # level they name.
+    extra = {}
+    for key, note in points.items():
+        if "url" in note:
+            extra.setdefault(note.get("level", 3), []).append((key, note))
+    parts = []
+    for band in index:
+        items = [(p["id"], p["title"], points.get(p["id"])) for p in band["points"]]
+        items += [(key, note.get("title", key), note) for key, note in extra.get(band["level"], [])]
+        with_notes = sum(1 for _, _, note in items if note)
+        parts.append(f"<h2>{escape(band['label'])} <span class='gcount'>({escape(band['cefr'])})</span></h2>")
+        parts.append(f"<div class='gcount'>{len(items)} points · {with_notes} with notes</div>")
+        for key, title, note in items:
+            url = (note or {}).get("url") or WIKI_URL + key
+            parts.append("<details class='gp'><summary>")
+            parts.append(key_tile_html((note or {}).get("key", ""), grid, config))
+            parts.append(f"<span>{escape(title)}</span>")
+            if note:
+                parts.append(f"<span class='pat'>{escape(note['pattern'])}</span>")
+            parts.append("</summary><div class='body'>")
+            if note:
+                parts.append(f"<p>{escape(note['explain'])}</p><table>")
+                for zh, py, en in note["examples"]:
+                    parts.append(f"<tr><td class='zh'>{escape(zh)}</td><td class='py'>{escape(py)}</td><td>{escape(en)}</td></tr>")
+                parts.append("</table>")
+                if note.get("note"):
+                    parts.append(f"<p>{escape(note['note'])}</p>")
+            else:
+                parts.append("<p class='todo'>No note written yet; the wiki article has the full explanation.</p>")
+            parts.append("<div class='links'>")
+            parts.append(f"<a data-cmd='link:{escape(url, quote=True)}'>Read on the Chinese Grammar Wiki ↗</a>")
+            if note and note.get("key"):
+                parts.append(f"<a data-cmd='search:{escape(note['key'], quote=True)}'>Find {escape(note['key'])} in the Browser</a>")
+            parts.append("</div></div></details>")
     return "".join(parts)
 
 
@@ -593,6 +726,8 @@ class HanziGridDialog(QDialog):
         elif cmd.startswith("search:"):
             browser = aqt.dialogs.open("Browser", mw)
             browser.search_for(self.search_for_text(cmd[len("search:"):]))
+        elif cmd.startswith("link:"):
+            openLink(cmd[len("link:"):])
 
     def search_for_text(self, text: str) -> str:
         """Browser search for cards in the chosen decks whose word contains
@@ -681,29 +816,32 @@ def open_settings() -> None:
     SettingsDialog(config, LEVEL_CHOICES, on_save=save_config).exec()
 
 
+def collect(config: dict) -> grid_data.Grid:
+    """Read the collection with the given settings. Runs in a background
+    thread (see open_grid), so it must not touch the user interface."""
+    use_official = config.get("levels", OFFICIAL) == OFFICIAL
+    return grid_data.collect(
+        mw.col,
+        hanzi_fields=config["hanzi_fields"],
+        level_field=config["level_field"],
+        mature_days=config["mature_days"],
+        decks=selected_decks(config),
+        mastered_days=config.get("mastered_days", 90),
+        pinyin_field=config.get("pinyin_field", ""),
+        meaning_fields=config.get("meaning_fields", []),
+        official_levels=grid_data.load_level_lists(DATA_FOLDER) if use_official else None,
+    )
+
+
 def open_grid() -> None:
     config = mw.addonManager.getConfig(__name__)
-    decks = selected_decks(config)
-    use_official = config.get("levels", OFFICIAL) == OFFICIAL
 
     # Reading ~10,000 notes takes a moment. QueryOp runs the work in a
     # background thread so Anki doesn't freeze, then calls `success` back on
     # the main thread, where it's safe to create windows.
     QueryOp(
         parent=mw,
-        op=lambda col: grid_data.collect(
-            col,
-            hanzi_fields=config["hanzi_fields"],
-            level_field=config["level_field"],
-            mature_days=config["mature_days"],
-            decks=decks,
-            mastered_days=config.get("mastered_days", 90),
-            pinyin_field=config.get("pinyin_field", ""),
-            meaning_fields=config.get("meaning_fields", []),
-            official_levels=(
-                grid_data.load_level_lists(DATA_FOLDER) if use_official else None
-            ),
-        ),
+        op=lambda col: collect(config),
         success=lambda grid: show_dialog(grid, config),
     ).failure(on_failure).with_progress("Building Hanzi Grid…").run_in_background()
 
@@ -716,3 +854,6 @@ mw.form.menuTools.addAction(action)
 # Make the "Config" button in Tools > Add-ons open our Settings window
 # instead of Anki's raw JSON editor.
 mw.addonManager.setConfigAction(__name__, open_settings)
+
+# The progress summary on the deck list.
+deck_widget.setup(open_grid, collect)

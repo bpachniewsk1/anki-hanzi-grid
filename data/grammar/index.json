@@ -1,0 +1,2017 @@
+[
+{
+"level": 1,
+"label": "HSK 1",
+"cefr": "A1",
+"points": [
+{
+"id": "ASGPNV3Q",
+"title": "Negation of \"you\" with \"mei\""
+},
+{
+"id": "ASGIPYFV",
+"title": "Standard negation with \"bu\""
+},
+{
+"id": "ASG9YK09",
+"title": "The \"all\" adverb \"dou\""
+},
+{
+"id": "ASGG25MD",
+"title": "The \"also\" adverb \"ye\""
+},
+{
+"id": "ASGP0KFF",
+"title": "Expressing \"and\" with \"he\""
+},
+{
+"id": "ASGA8NIB",
+"title": "Offering choices with \"haishi\""
+},
+{
+"id": "ASGQUKJF",
+"title": "Age with \"sui\""
+},
+{
+"id": "ASGI0T9S",
+"title": "Measure word \"ge\""
+},
+{
+"id": "ASGT3KF6",
+"title": "Structure of dates"
+},
+{
+"id": "ASGVH4Q5",
+"title": "Structure of days of the week"
+},
+{
+"id": "ASGCRH6P",
+"title": "Structure of numbers"
+},
+{
+"id": "ASGN6BBU",
+"title": "Structure of times (basic)"
+},
+{
+"id": "ASGCI0KG",
+"title": "Expressing close possession without \"de\""
+},
+{
+"id": "ASGUHQD2",
+"title": "Expressing possession with \"de\""
+},
+{
+"id": "ASGMJHZO",
+"title": "Questions with \"ne\""
+},
+{
+"id": "ASGMPZ6D",
+"title": "Suggestions with \"ba\""
+},
+{
+"id": "ASGLRWT8",
+"title": "Expressing existence in a place with \"zai\""
+},
+{
+"id": "ASG04ZCI",
+"title": "Expressing existence with \"you\""
+},
+{
+"id": "ASGOOCVO",
+"title": "Expressing possession with \"you\""
+},
+{
+"id": "ASGUGWVZ",
+"title": "Using the verb \"jiao\""
+},
+{
+"id": "ASGFYNCL",
+"title": "Using the verb \"qu\""
+},
+{
+"id": "ASGPS9NY",
+"title": "Using the verb \"xing\""
+},
+{
+"id": "ASG9PQ40",
+"title": "Expressing ability or possibility with \"neng\""
+},
+{
+"id": "ASGRHM0E",
+"title": "Expressing a learned skill with \"hui\""
+},
+{
+"id": "ASGVT2KN",
+"title": "Expressing \"be going to\" with \"yao\""
+},
+{
+"id": "ASG6SPYK",
+"title": "Expressing permission with \"keyi\""
+},
+{
+"id": "ASGXVEAR",
+"title": "Wanting to do something with \"yao\""
+},
+{
+"id": "ASGH2MNO",
+"title": "How to do something with \"zenme\""
+},
+{
+"id": "ASGAUCXK",
+"title": "Negation of past actions with \"meiyou\""
+},
+{
+"id": "ASGIVZJU",
+"title": "Negative commands with \"buyao\""
+},
+{
+"id": "ASGETNCO",
+"title": "Basic sentence order"
+},
+{
+"id": "ASGUN7RX",
+"title": "Connecting nouns with \"shi\""
+},
+{
+"id": "ASG8HVFN",
+"title": "Expressing \"excessively\" with \"tai\""
+},
+{
+"id": "ASG17BLH",
+"title": "Simple \"noun + adjective\" sentences"
+},
+{
+"id": "ASGZH7K3",
+"title": "Affirmative-negative question"
+},
+{
+"id": "ASGJQPSC",
+"title": "Placement of question words"
+},
+{
+"id": "ASG4D8XB",
+"title": "Tag questions with \"bu\""
+},
+{
+"id": "ASGSJYZ2",
+"title": "Tag questions with \"ma\""
+},
+{
+"id": "ASGQ2AZA",
+"title": "Yes-no questions with \"ma\""
+},
+{
+"id": "ASGJ46H1",
+"title": "Comparing \"er\" and \"liang\""
+}
+]
+},
+{
+"level": 2,
+"label": "HSK 2",
+"cefr": "A2",
+"points": [
+{
+"id": "ASGLEVUV",
+"title": "Negative adjectives with \"-si le\""
+},
+{
+"id": "ASG1NAXO",
+"title": "Approximations with \"chabuduo\""
+},
+{
+"id": "ASGWNEYM",
+"title": "Emphasizing quantity with \"dou\""
+},
+{
+"id": "ASG846EA",
+"title": "Expressing actions in progress with \"zai\""
+},
+{
+"id": "ASGP000J",
+"title": "Expressing \"all along\" with \"yizhi\""
+},
+{
+"id": "ASGNXI27",
+"title": "Expressing \"already\" with \"yijing\""
+},
+{
+"id": "ASGXJPJS",
+"title": "Expressing \"always\" with \"zongshi\""
+},
+{
+"id": "ASGJBZKC",
+"title": "Expressing \"and also\" with \"hai\""
+},
+{
+"id": "ASGQJJYO",
+"title": "Expressing \"just\" with \"gang\""
+},
+{
+"id": "ASGN8C8R",
+"title": "Expressing \"only\" with \"zhi\""
+},
+{
+"id": "ASGEB54D",
+"title": "Expressing \"then\" with \"jiu\""
+},
+{
+"id": "ASG9W0UX",
+"title": "Negative commands with \"bie\""
+},
+{
+"id": "ASG2ZC5S",
+"title": "Simultaneous tasks with \"yibian\""
+},
+{
+"id": "ASG9LLJU",
+"title": "Asking about degree with \"duo\""
+},
+{
+"id": "ASGC06N0",
+"title": "Basic comparisons with \"yiyang\""
+},
+{
+"id": "ASGPM3MY",
+"title": "Expressing \"a little too\" with \"you dian\""
+},
+{
+"id": "ASGPFUM2",
+"title": "Expressing \"both A and B\" with \"you\""
+},
+{
+"id": "ASGI96BQ",
+"title": "Expressing distance with \"li\""
+},
+{
+"id": "ASG4NIPB",
+"title": "Expressing \"even more\" with \"geng\""
+},
+{
+"id": "ASGUNMHU",
+"title": "Expressing \"not very\" with \"bu tai\""
+},
+{
+"id": "ASGC885D",
+"title": "Expressing \"really\" with \"zhen\""
+},
+{
+"id": "ASGGH7RR",
+"title": "Intensifying with \"duo\""
+},
+{
+"id": "ASGAY164",
+"title": "Moderating positive adjectives with \"hai\""
+},
+{
+"id": "ASGVUFKX",
+"title": "Modifying nouns with adjective + \"de\""
+},
+{
+"id": "ASGLQKD2",
+"title": "Modifying nouns with phrase + \"de\""
+},
+{
+"id": "ASG3544U",
+"title": "Superlative \"zui\""
+},
+{
+"id": "ASG6HYOU",
+"title": "Expressing \"or\" in statements"
+},
+{
+"id": "ASGSZ0HP",
+"title": "Expressing \"with\" with \"gen\""
+},
+{
+"id": "ASG8VJM8",
+"title": "The filler word \"neige\""
+},
+{
+"id": "ASGUD81S",
+"title": "Two words for \"but\""
+},
+{
+"id": "ASGRLQGY",
+"title": "After a specific time with \"yihou\""
+},
+{
+"id": "ASGJ2OJC",
+"title": "Before a specific time with \"yiqian\""
+},
+{
+"id": "ASGVCWLU",
+"title": "Expressing \"before\" in general with \"yiqian\""
+},
+{
+"id": "ASGQ1KOY",
+"title": "Expressing \"just now\" with \"gangcai\""
+},
+{
+"id": "ASGWN185",
+"title": "Expressing \"when\" with \"de shihou\""
+},
+{
+"id": "ASGPVFU1",
+"title": "In the future in general with \"yihou\""
+},
+{
+"id": "ASG5RWKO",
+"title": "Time words and word order"
+},
+{
+"id": "ASGOUD8U",
+"title": "Approximating with sequential numbers"
+},
+{
+"id": "ASGIM3AX",
+"title": "Big numbers in Chinese"
+},
+{
+"id": "ASGDTO07",
+"title": "Structure of times (advanced)"
+},
+{
+"id": "ASGHC9CA",
+"title": "Using \"ji\" to mean \"several\""
+},
+{
+"id": "ASGT185D",
+"title": "Change of state with \"le\""
+},
+{
+"id": "ASGJIP2E",
+"title": "Conceding with \"ba\""
+},
+{
+"id": "ASGM055L",
+"title": "Expressing \"already\" with just \"le\""
+},
+{
+"id": "ASGAGDCQ",
+"title": "Expressing completion with \"le\""
+},
+{
+"id": "ASGQGV3P",
+"title": "Expressing experiences with \"guo\""
+},
+{
+"id": "ASGFR96B",
+"title": "Expressing \"not anymore\" with \"le\""
+},
+{
+"id": "ASGE5Q4J",
+"title": "Expressing \"now\" with \"le\""
+},
+{
+"id": "ASGC8CB8",
+"title": "Modal particle \"ne\""
+},
+{
+"id": "ASGW66JM",
+"title": "Sentence-final interjection \"a\""
+},
+{
+"id": "ASGDHC1H",
+"title": "Softening speech with \"ba\""
+},
+{
+"id": "ASG5MOMM",
+"title": "Structural particle \"de\""
+},
+{
+"id": "ASGP69JD",
+"title": "Using \"guo\" with \"le\""
+},
+{
+"id": "ASG8SI2K",
+"title": "Basic comparisons with \"bi\""
+},
+{
+"id": "ASGGGIW8",
+"title": "Expressing \"from… to…\" with \"cong… dao…\""
+},
+{
+"id": "ASGEAH5M",
+"title": "Basic comparisons with \"meiyou\""
+},
+{
+"id": "ASGRBKSL",
+"title": "Directional verbs \"lai\" and \"qu\""
+},
+{
+"id": "ASG25C48",
+"title": "Polite requests with \"qing\""
+},
+{
+"id": "ASG95AL1",
+"title": "Auxiliary verb \"yao\" and its multiple meanings"
+},
+{
+"id": "ASGV01X9",
+"title": "Expressing \"should\" with \"yinggai\""
+},
+{
+"id": "ASGW9737",
+"title": "Expressing \"will\" with \"hui\""
+},
+{
+"id": "ASGT97VF",
+"title": "Expressing \"would like to\" with \"xiang\""
+},
+{
+"id": "ASGPRGAX",
+"title": "Actions in a row"
+},
+{
+"id": "ASG35T4H",
+"title": "Expressing \"difficult\" with \"nan\""
+},
+{
+"id": "ASGJ36VN",
+"title": "Expressing duration with \"le\""
+},
+{
+"id": "ASG8NM5E",
+"title": "Expressing \"never\" with \"conglai\""
+},
+{
+"id": "ASG69RR8",
+"title": "Expressing ongoing duration with double \"le\""
+},
+{
+"id": "ASGNVE15",
+"title": "Expressing \"together\" with \"yiqi\""
+},
+{
+"id": "ASGI2KHC",
+"title": "Inability with \"mei banfa\""
+},
+{
+"id": "ASGX0Z0N",
+"title": "Indicating location with \"zai\" before verbs"
+},
+{
+"id": "ASGYC77J",
+"title": "Reduplication of verbs"
+},
+{
+"id": "ASG90DXK",
+"title": "Special cases of \"zai\" following verbs"
+},
+{
+"id": "ASGID0E8",
+"title": "Special verbs with \"hen\""
+},
+{
+"id": "ASGLFX54",
+"title": "Using \"dao\" to mean \"to go to\""
+},
+{
+"id": "ASGJQU93",
+"title": "Using \"hao\" to mean \"easy\""
+},
+{
+"id": "ASGWCESP",
+"title": "Verbing briefly with \"yixia\""
+},
+{
+"id": "ASGI2OAG",
+"title": "Verbs that take double objects"
+},
+{
+"id": "ASG8R2V8",
+"title": "Potential complement \"-bu dong\" for not understanding"
+},
+{
+"id": "ASGWNGEP",
+"title": "Result complements \"-dao\" and \"-jian\""
+},
+{
+"id": "ASGNQUC1",
+"title": "Result complement \"-wan\" for finishing"
+},
+{
+"id": "ASGWVZ0T",
+"title": "Expressing \"some\" with \"yixie\""
+},
+{
+"id": "ASG4NDHB",
+"title": "Using \"youde\" to mean \"some\""
+},
+{
+"id": "ASGL6JOE",
+"title": "Counting money"
+},
+{
+"id": "ASGB6L4M",
+"title": "Expressing \"every\" with \"mei\""
+},
+{
+"id": "ASGAC1P9",
+"title": "Expressing \"half\" with \"ban\""
+},
+{
+"id": "ASG64BTE",
+"title": "Measure words for counting"
+},
+{
+"id": "ASGL9KQM",
+"title": "Measure words in quantity questions"
+},
+{
+"id": "ASGZC42B",
+"title": "Measure words with \"this\" and \"that\""
+},
+{
+"id": "ASGK904U",
+"title": "Ordinal numbers with \"di\""
+},
+{
+"id": "ASGC701A",
+"title": "Asking how something is with \"zenmeyang\""
+},
+{
+"id": "ASGD7NS3",
+"title": "Asking why with \"zenme\""
+},
+{
+"id": "ASGYKDNF",
+"title": "Questions with \"le ma\""
+},
+{
+"id": "ASGTDUJO",
+"title": "Cause and effect with \"yinwei\" and \"suoyi\""
+},
+{
+"id": "ASGNGEU8",
+"title": "Expressing \"about to happen\" with \"le\""
+},
+{
+"id": "ASGAQV6C",
+"title": "Expressing \"everything\" with \"shenme dou\""
+},
+{
+"id": "ASGFBWZL",
+"title": "Expressing location with \"zai... shang / xia / li\""
+},
+{
+"id": "ASGZ8OIF",
+"title": "Expressing \"stop doing\" with \"bie… le\""
+},
+{
+"id": "ASGRJ1BI",
+"title": "Comparing \"bu\" and \"mei\""
+},
+{
+"id": "ASGD88UO",
+"title": "Comparing \"yao\" and \"xiang\""
+}
+]
+},
+{
+"level": 3,
+"label": "HSK 3",
+"cefr": "B1",
+"points": [
+{
+"id": "ASGVME5V",
+"title": "Adjectives with \"-ji le\""
+},
+{
+"id": "ASGVYIZT",
+"title": "Expressing \"not very\" with \"bu zenme\""
+},
+{
+"id": "ASGCPDSR",
+"title": "Indicating the whole with \"quan\""
+},
+{
+"id": "ASGDHE8S",
+"title": "Reduplication of adjectives"
+},
+{
+"id": "ASGMAFSX",
+"title": "Turning adjectives into adverbs"
+},
+{
+"id": "ASGUD25J",
+"title": "Coincidence with \"zhenghao\""
+},
+{
+"id": "ASGIRILI",
+"title": "Continuation with \"hai\""
+},
+{
+"id": "ASGY21RK",
+"title": "Emphasis with \"jiushi\""
+},
+{
+"id": "ASGD3C4S",
+"title": "Emphasizing negation with \"you\""
+},
+{
+"id": "ASG9B210",
+"title": "Expressing \"about to\" with \"jiuyao\""
+},
+{
+"id": "ASGIZQJ2",
+"title": "Expressing \"again\" in the future with \"zai\""
+},
+{
+"id": "ASGN1JR5",
+"title": "Expressing \"again\" in the past with \"you\""
+},
+{
+"id": "ASGTKXFR",
+"title": "Expressing \"all along\" with \"yuanlai\""
+},
+{
+"id": "ASG06EA8",
+"title": "Expressing \"all at once\" with \"yixiazi\""
+},
+{
+"id": "ASG6ESWW",
+"title": "Expressing \"almost\" using \"chadian\""
+},
+{
+"id": "ASGT1CIR",
+"title": "Expressing \"already\" with \"dou\""
+},
+{
+"id": "ASG8KUHG",
+"title": "Expressing \"always\" with \"conglai\""
+},
+{
+"id": "ASG6B21A",
+"title": "Expressing \"as a result\" with \"jieguo\""
+},
+{
+"id": "ASGSVF28",
+"title": "Expressing duration of inaction"
+},
+{
+"id": "ASGF00B7",
+"title": "Expressing \"each other\" with \"huxiang\""
+},
+{
+"id": "ASGKITRZ",
+"title": "Expressing earliness with \"jiu\""
+},
+{
+"id": "ASG49BE6",
+"title": "Expressing \"enough\" with \"gou\""
+},
+{
+"id": "ASG700A5",
+"title": "Expressing \"finally\" with \"zhongyu\""
+},
+{
+"id": "ASGWAR65",
+"title": "Expressing \"had better\" with \"haishi\""
+},
+{
+"id": "ASG35CD7",
+"title": "Expressing \"had better\" with \"zuihao\""
+},
+{
+"id": "ASG1F4D1",
+"title": "Expressing \"in this way\" with \"zheyang\""
+},
+{
+"id": "ASG3WTCJ",
+"title": "Expressing lateness with \"cai\""
+},
+{
+"id": "ASGBC7A0",
+"title": "Expressing \"one by one\" with \"yi\""
+},
+{
+"id": "ASGPW8PP",
+"title": "Expressing \"small quantity\" with \"jiu\""
+},
+{
+"id": "ASGLJM55",
+"title": "Sequencing with \"xian\" and \"zai\""
+},
+{
+"id": "ASGII66E",
+"title": "Using \"always\" as a complaint with \"laoshi\""
+},
+{
+"id": "ASGYW5RS",
+"title": "Using \"cai\" for small numbers"
+},
+{
+"id": "ASG8GSXY",
+"title": "Using \"ye\" and \"dou\" together"
+},
+{
+"id": "ASGNKKP6",
+"title": "Adjectives with \"name\" and \"zheme\""
+},
+{
+"id": "ASGDF1F7",
+"title": "Expressing \"quite\" with \"ting\""
+},
+{
+"id": "ASG72HKP",
+"title": "Expressing \"rather\" with \"bijiao\""
+},
+{
+"id": "ASGDIDAC",
+"title": "Ending a non-exhaustive list with \"shenme de\""
+},
+{
+"id": "ASGPY23Z",
+"title": "Expressing \"stuff like that\" with \"zhileide\""
+},
+{
+"id": "ASGF763H",
+"title": "Non-exhaustive lists with \"dengdeng\""
+},
+{
+"id": "ASGA0S4T",
+"title": "A softer \"but\" with \"buguo\""
+},
+{
+"id": "ASGDFQP7",
+"title": "Expressing \"how about\" with \"yaobu\""
+},
+{
+"id": "ASGHQRI1",
+"title": "Expressing \"in addition\" with \"haiyou\""
+},
+{
+"id": "ASG2KQZI",
+"title": "Expressing \"in addition\" with \"lingwai\""
+},
+{
+"id": "ASGATDLX",
+"title": "Expressing \"in addition\" with \"zaishuo\""
+},
+{
+"id": "ASGX298Z",
+"title": "Expressing \"then…\" with \"name\""
+},
+{
+"id": "ASGBZ578",
+"title": "Using \"lai\" to connect two verb phrases"
+},
+{
+"id": "ASG6120A",
+"title": "Reduplication of measure words"
+},
+{
+"id": "ASGTD3L3",
+"title": "Expressing \"before\" and \"after\" with \"zhiqian\" and \"zhihou\""
+},
+{
+"id": "ASGNEMXP",
+"title": "Expressing \"ever since\" with \"yilai\""
+},
+{
+"id": "ASGGL59D",
+"title": "Expressing \"when\" with \"shi\""
+},
+{
+"id": "ASGY0UDC",
+"title": "Sequencing past events with \"houlai\""
+},
+{
+"id": "ASG84RE9",
+"title": "Expressing fractions with \"fenzhi\""
+},
+{
+"id": "ASG004ZK",
+"title": "Indicating a number in excess"
+},
+{
+"id": "ASGI9WXT",
+"title": "Advanced yes-no questions with \"ma\""
+},
+{
+"id": "ASGOIDEO",
+"title": "Aspect particle \"zhe\""
+},
+{
+"id": "ASGVMC4B",
+"title": "Expressing the self-evident with \"ma\""
+},
+{
+"id": "ASGELOTT",
+"title": "Reviewing options with \"ba\""
+},
+{
+"id": "ASG19S1M",
+"title": "Using \"de\" (modal particle)"
+},
+{
+"id": "ASG49889",
+"title": "Expressing \"about\" with \"guanyu\""
+},
+{
+"id": "ASGC6E1C",
+"title": "Expressing \"all the way until\" with \"zhidao\""
+},
+{
+"id": "ASGLHAV3",
+"title": "Expressing \"for\" with \"gei\""
+},
+{
+"id": "ASG68RBX",
+"title": "Expressing \"for\" with \"wei\""
+},
+{
+"id": "ASG10CAE",
+"title": "Expressing \"less than\" with \"budao\""
+},
+{
+"id": "ASGQXARS",
+"title": "Expressing \"towards\" with \"xiang\""
+},
+{
+"id": "ASGAD070",
+"title": "Expressing \"toward\" with \"wang\""
+},
+{
+"id": "ASGH13JY",
+"title": "Idiomatic phrases with \"zai\""
+},
+{
+"id": "ASG8ICO9",
+"title": "Using \"dui\" with verbs"
+},
+{
+"id": "ASG9K0F8",
+"title": "Appearance with \"kanqilai\""
+},
+{
+"id": "ASG5T7XC",
+"title": "Causative verbs"
+},
+{
+"id": "ASG765HD",
+"title": "Expressing \"it depends\" with \"kan\""
+},
+{
+"id": "ASG3ROPY",
+"title": "Expressing \"it seems\" with \"haoxiang\""
+},
+{
+"id": "ASGRBC43",
+"title": "Expressing \"mistakenly think that\" with \"yiwei\""
+},
+{
+"id": "ASG11DA8",
+"title": "Expressing \"through\" with \"jingguo\""
+},
+{
+"id": "ASG9B1E3",
+"title": "Expressing \"through\" with \"tongguo\""
+},
+{
+"id": "ASG1CEA8",
+"title": "Expressing \"to come from\" with \"laizi\""
+},
+{
+"id": "ASGWDWFN",
+"title": "Making judgments with \"suan\""
+},
+{
+"id": "ASG98FZK",
+"title": "Using \"lai\" as a dummy verb"
+},
+{
+"id": "ASGECD0E",
+"title": "Expressing \"don't need to\" with \"buyong\""
+},
+{
+"id": "ASGPXLP9",
+"title": "Expressing \"must\" with \"dei\""
+},
+{
+"id": "ASG9B0M8",
+"title": "Doing something less with \"shao\""
+},
+{
+"id": "ASGLKGZP",
+"title": "Doing something more with \"duo\""
+},
+{
+"id": "ASGEYQ9O",
+"title": "Expressing actions in progress (full form)"
+},
+{
+"id": "ASG5BOGP",
+"title": "Expressing \"not often\" with \"bu zenme\""
+},
+{
+"id": "ASG1CCAP",
+"title": "Expressing \"until\" with \"dao\""
+},
+{
+"id": "ASG5AODR",
+"title": "Measure words for verbs"
+},
+{
+"id": "ASG4GVRX",
+"title": "Separable verb"
+},
+{
+"id": "ASGMMHTQ",
+"title": "Verbs followed by \"gei\""
+},
+{
+"id": "ASG3ORNN",
+"title": "Verbs preceded by \"gei\""
+},
+{
+"id": "ASG79STE",
+"title": "Degree complement"
+},
+{
+"id": "ASG8LWBJ",
+"title": "Direction complement"
+},
+{
+"id": "ASGBPXOB",
+"title": "Direction complement \"-qilai\""
+},
+{
+"id": "ASGCPJPQ",
+"title": "Potential complement"
+},
+{
+"id": "ASGNNMST",
+"title": "Result complements"
+},
+{
+"id": "ASG1PTJX",
+"title": "Result complement \"-xiaqu\""
+},
+{
+"id": "ASGOWBSL",
+"title": "Expressing \"all\" with \"suoyou\""
+},
+{
+"id": "ASGMT1M1",
+"title": "Expressing \"one of\" with \"zhiyi\""
+},
+{
+"id": "ASGD3FE5",
+"title": "Expressing \"the other\" with \"lingwai\""
+},
+{
+"id": "ASGD4EC8",
+"title": "Simple rhetorical questions"
+},
+{
+"id": "ASGE662E",
+"title": "The \"shi... de\" construction for emphasizing details"
+},
+{
+"id": "ASG0UFR4",
+"title": "The \"shi... de\" construction for indicating purpose"
+},
+{
+"id": "ASG8YTSF",
+"title": "The \"shi... de\" patterns: an overview"
+},
+{
+"id": "ASG5KNWW",
+"title": "Topic-comment sentences"
+},
+{
+"id": "ASG2UB2B",
+"title": "Using \"ba\" sentences"
+},
+{
+"id": "ASGHF9F1",
+"title": "Using \"bei\" sentences"
+},
+{
+"id": "ASGAC619",
+"title": "Alternative existential sentences"
+},
+{
+"id": "ASGDUZ55",
+"title": "Expressing \"as one likes\" with \"jiu\""
+},
+{
+"id": "ASGEEA2D",
+"title": "Expressing \"double negation\""
+},
+{
+"id": "ASGNP0WV",
+"title": "Expressing \"even\" with \"lian\" and \"dou\""
+},
+{
+"id": "ASGXHQEF",
+"title": "Expressing \"every time\" with \"mei\" and \"dou\""
+},
+{
+"id": "ASG13ALM",
+"title": "Expressing \"every\" with question words"
+},
+{
+"id": "ASGCED31",
+"title": "Expressing \"how often\""
+},
+{
+"id": "ASG7UE4H",
+"title": "Expressing \"more and more\" with \"yuelaiyue\""
+},
+{
+"id": "ASG7D4EC",
+"title": "Expressing \"multiples\" with \"bei\""
+},
+{
+"id": "ASGRURCZ",
+"title": "Expressing \"not at all\" with \"yidianr ye bu\""
+},
+{
+"id": "ASG0EQQJ",
+"title": "Expressing not knowing how to do something using \"hao\""
+},
+{
+"id": "ASGQGJXT",
+"title": "Expressing purpose with \"weile\""
+},
+{
+"id": "ASG7ED89",
+"title": "Expressing \"some\" with question words"
+},
+{
+"id": "ASGD60A6",
+"title": "Phrases using \"laishuo\""
+},
+{
+"id": "ASG5DG95",
+"title": "Expressing comparable degree with \"you\""
+},
+{
+"id": "ASG920B7",
+"title": "Expressing \"compared with\" using \"gen\""
+},
+{
+"id": "ASG64E96",
+"title": "Expressing \"even more\" with \"geng\" or \"hai\""
+},
+{
+"id": "ASG6KUS5",
+"title": "Expressing \"much more\" in comparisons"
+},
+{
+"id": "ASGT9Y8P",
+"title": "Conceding a point with \"shi\""
+},
+{
+"id": "ASGTFUD0",
+"title": "Events in quick succession with \"yi... jiu...\""
+},
+{
+"id": "ASGXI560",
+"title": "Expressing \"although\" with \"suiran\" and \"danshi\""
+},
+{
+"id": "ASG30A60",
+"title": "Expressing \"either... or...\" with \"yaome\""
+},
+{
+"id": "ASGHFPGG",
+"title": "Expressing \"except\" and \"in addition\" with \"chule… yiwai\""
+},
+{
+"id": "ASGOB1BF",
+"title": "Expressing good luck with \"haihao\""
+},
+{
+"id": "ASGGIVT0",
+"title": "Expressing \"if... then...\" with \"ruguo... jiu...\""
+},
+{
+"id": "ASGN4VUU",
+"title": "Expressing \"if\" with \"ruguo... dehua\""
+},
+{
+"id": "ASGTYJ3E",
+"title": "Expressing \"not only... but also\" with \"budan... erqie...\""
+},
+{
+"id": "ASGFPV2C",
+"title": "Expressing \"no wonder\""
+},
+{
+"id": "ASGCWHNF",
+"title": "Expressing various aspects with \"yi fangmian\""
+},
+{
+"id": "ASG68F61",
+"title": "Expressing \"when\" with \"dengdao\""
+},
+{
+"id": "ASGE8FLP",
+"title": "Comparing \"changchang\" and \"jingchang\""
+},
+{
+"id": "ASGJFFWG",
+"title": "Comparing \"gang\" and \"gangcai\""
+},
+{
+"id": "ASGV55Y4",
+"title": "Comparing \"youdian\" and \"yidian\""
+},
+{
+"id": "ASGZL717",
+"title": "Comparing \"hui,\" \"neng,\" \"keyi\""
+},
+{
+"id": "ASGQJ5IC",
+"title": "Comparing \"haishi\" and \"huozhe\""
+},
+{
+"id": "ASGPINA4",
+"title": "Comparing \"renjia\" and \"bieren\""
+},
+{
+"id": "ASGN6O6J",
+"title": "Comparing \"zhijian\" and “zhongjian\""
+},
+{
+"id": "ASG59C66",
+"title": "Comparing \"li\" and \"cong\""
+},
+{
+"id": "ASGLNKZR",
+"title": "Comparing \"yihou\" and \"de shihou\""
+}
+]
+},
+{
+"level": 4,
+"label": "HSK 4–5",
+"cefr": "B2",
+"points": [
+{
+"id": "ASGB8BWA",
+"title": "Adjectival complement \"de budeliao\""
+},
+{
+"id": "ASGG1ZBL",
+"title": "Adjectival complement \"de hen\""
+},
+{
+"id": "ASGEHTV5",
+"title": "Expressing \"a bit too\""
+},
+{
+"id": "ASGVACYB",
+"title": "Saying \"a lot\" with \"youdeshi\""
+},
+{
+"id": "ASGQFW44",
+"title": "Advanced uses of \"dou\""
+},
+{
+"id": "ASG4807F",
+"title": "Advanced uses of \"hai\""
+},
+{
+"id": "ASG8QS6H",
+"title": "Advanced uses of \"zong\""
+},
+{
+"id": "ASGJPQ0Q",
+"title": "Assessing situations with \"kanlai\""
+},
+{
+"id": "ASG767A2",
+"title": "Declaring the only option with \"zhihao\""
+},
+{
+"id": "ASGSPAKW",
+"title": "Emphatic adverb \"ke\""
+},
+{
+"id": "ASG4V36Q",
+"title": "Expressing \"after all\" with \"bijing\""
+},
+{
+"id": "ASG78FDE",
+"title": "Expressing a last chance with \"zaibu... jiu...\""
+},
+{
+"id": "ASGGOUJB",
+"title": "Expressing \"almost\" using \"chadian mei\""
+},
+{
+"id": "ASGZVM27",
+"title": "Expressing \"anyway\" with \"fanzheng\""
+},
+{
+"id": "ASGINBWJ",
+"title": "Expressing \"as much as possible\" with \"jinliang\""
+},
+{
+"id": "ASGD4BA3",
+"title": "Expressing concern with \"kongpa\""
+},
+{
+"id": "ASG81QV3",
+"title": "Expressing difficulty with \"hao (bu) rongyi\""
+},
+{
+"id": "ASGKWV6F",
+"title": "Expressing \"even\" with \"shenzhi\""
+},
+{
+"id": "ASG626D3",
+"title": "Expressing \"feel free\" with \"jinguan\""
+},
+{
+"id": "ASG0C825",
+"title": "Expressing \"have to\" with \"budebu\""
+},
+{
+"id": "ASGTVEHJ",
+"title": "Expressing \"in the end\" with \"daodi\""
+},
+{
+"id": "ASGDK0BR",
+"title": "Expressing \"in the end\" with \"jiujing\""
+},
+{
+"id": "ASGZ8MJM",
+"title": "Expressing \"just\" do it with \"gancui\""
+},
+{
+"id": "ASGVA70K",
+"title": "Expressing \"nearly\" with \"jihu\""
+},
+{
+"id": "ASG7R8US",
+"title": "Expressing \"never again\" with \"zai ye bu\""
+},
+{
+"id": "ASG16EF6",
+"title": "Expressing \"once\" with \"cengjing\""
+},
+{
+"id": "ASG6F157",
+"title": "Expressing \"originally\" with \"benlai\""
+},
+{
+"id": "ASGP6LVA",
+"title": "Expressing \"over and over again\" with \"zaisan\""
+},
+{
+"id": "ASG8OLAE",
+"title": "Expressing \"simply\" with \"jianzhi\""
+},
+{
+"id": "ASGACMNQ",
+"title": "Expressing \"since the beginning\" with \"yixiang\""
+},
+{
+"id": "ASGIVGZO",
+"title": "Expressing \"to make certain\" with \"qianwan\""
+},
+{
+"id": "ASGTIMTS",
+"title": "Expressing wasted efforts with \"bai\""
+},
+{
+"id": "ASG5334C",
+"title": "Expressing \"while you're at it\" with \"shunbian\""
+},
+{
+"id": "ASGF08B6",
+"title": "Repeated actions in the past with \"you\""
+},
+{
+"id": "ASGMCP9V",
+"title": "Rhetorical questions with \"nandao\""
+},
+{
+"id": "ASGQAN74",
+"title": "The opposite of \"chabuduo\" is \"cha hen duo\""
+},
+{
+"id": "ASGGPG97",
+"title": "Listing things with \"a\""
+},
+{
+"id": "ASG4FB55",
+"title": "Expressing \"and then\" with \"yushi\""
+},
+{
+"id": "ASGMX0ZS",
+"title": "Using \"er\" to explain contrasting ideas"
+},
+{
+"id": "ASGS4DBY",
+"title": "Expressing \"among\" with \"dangzhong\""
+},
+{
+"id": "ASGF205D",
+"title": "Expressing \"each other\" with \"bici\""
+},
+{
+"id": "ASG75EE1",
+"title": "Expressing \"when\" using \"dang\""
+},
+{
+"id": "ASGD1LNT",
+"title": "Expressing \"within (it/them)\" with \"qizhong\""
+},
+{
+"id": "ASGNPO4V",
+"title": "Name-calling with \"zhege\""
+},
+{
+"id": "ASG4K5WH",
+"title": "Advanced \"le\" after an object"
+},
+{
+"id": "ASG890CA",
+"title": "Advanced \"le\" with complements"
+},
+{
+"id": "ASGB33AE",
+"title": "Marking a topic with \"ma\""
+},
+{
+"id": "ASGW7YXP",
+"title": "Softening the tone of questions with \"ne\""
+},
+{
+"id": "ASG7AE5C",
+"title": "Defining upper and lower limits"
+},
+{
+"id": "ASGHVFRA",
+"title": "Expressing \"along with…\" with \"suizhe\""
+},
+{
+"id": "ASGLI7GW",
+"title": "Expressing \"ever since\" with \"zicong\""
+},
+{
+"id": "ASGD2A08",
+"title": "Expressing \"for…\" with \"eryan\""
+},
+{
+"id": "ASG50341",
+"title": "Expressing \"including\" with \"zainei\""
+},
+{
+"id": "ASGGB3IV",
+"title": "Expressing \"on the basis of\" with \"ping\""
+},
+{
+"id": "ASGEZ2HN",
+"title": "Expressing passive voice with \"gei\""
+},
+{
+"id": "ASGZRKTG",
+"title": "Expressing \"with regards to\" with \"zhiyu\""
+},
+{
+"id": "ASG8RW47",
+"title": "Limiting scope with \"jiu\""
+},
+{
+"id": "ASGI9PNV",
+"title": "Opportune timing with \"chen\""
+},
+{
+"id": "ASGUQUPG",
+"title": "Emphasizing a negation with \"bing\""
+},
+{
+"id": "ASG8F7D4",
+"title": "Expressing \"if it were not for\" with \"yaobushi\""
+},
+{
+"id": "ASG44TBS",
+"title": "Expressing \"thanks to\" with \"duokui\""
+},
+{
+"id": "ASG6TB4J",
+"title": "Expressing \"that's all\" with \"eryi\""
+},
+{
+"id": "ASG68DA5",
+"title": "Using \"jiang\" as a formal \"ba\""
+},
+{
+"id": "ASGN3IGH",
+"title": "Challenging a verb with \"shenme\""
+},
+{
+"id": "ASG1MD4N",
+"title": "Comparing specifically with \"xiang\""
+},
+{
+"id": "ASGE4B94",
+"title": "Comparisons with \"biqi\""
+},
+{
+"id": "ASGWH1D5",
+"title": "Comparisons with \"buru\""
+},
+{
+"id": "ASGS6UKN",
+"title": "Making \"-ize\" and \"-ify\" verbs with \"hua\""
+},
+{
+"id": "ASGYKH5G",
+"title": "Using \"nanguai\" as a verb"
+},
+{
+"id": "ASGIQPUJ",
+"title": "Expressing future with \"jiang\""
+},
+{
+"id": "ASG5C89R",
+"title": "Combining verbs with \"bing\""
+},
+{
+"id": "ASGGNXVR",
+"title": "Emphasizing the doer of an action with \"you\""
+},
+{
+"id": "ASGYDKT3",
+"title": "Expressing \"hard to avoid\" with \"nanmian\""
+},
+{
+"id": "ASGB781C",
+"title": "Expressing \"moreover\" with \"bingqie\""
+},
+{
+"id": "ASGGJA6A",
+"title": "Expressing \"to be worth\" doing with \"zhide\""
+},
+{
+"id": "ASGA0098",
+"title": "Indicating negative impact with \"haide\""
+},
+{
+"id": "ASG1DXUD",
+"title": "Passive verbs with \"shou\""
+},
+{
+"id": "ASG7AUNJ",
+"title": "Using \"zhe\" when \"verbing away\""
+},
+{
+"id": "ASG87D22",
+"title": "Expressing \"especially\" with \"gewai\""
+},
+{
+"id": "ASGW863F",
+"title": "Expressing \"although\" with \"jinguan\""
+},
+{
+"id": "ASG1RE80",
+"title": "Expressing contrariness with \"dao\""
+},
+{
+"id": "ASGX5QTV",
+"title": "Expressing \"on the contrary\" with \"fan'er\""
+},
+{
+"id": "ASGEG2QB",
+"title": "The \"however\" adverb \"que\""
+},
+{
+"id": "ASGL90MR",
+"title": "Expressing \"due to…\" with \"youyu\""
+},
+{
+"id": "ASGG4BX9",
+"title": "Expressing \"since\" with \"jiran\""
+},
+{
+"id": "ASGUEFAL",
+"title": "Expressing \"therefore\" with \"yinci\""
+},
+{
+"id": "ASGTPGXK",
+"title": "Stating the effect before the cause"
+},
+{
+"id": "ASG9E5BB",
+"title": "Advanced degree complements"
+},
+{
+"id": "ASG516F9",
+"title": "Advanced potential complements"
+},
+{
+"id": "ASG4OM4T",
+"title": "Advanced result complements \"zhu\", \"kai\", and \"chulai\""
+},
+{
+"id": "ASGSCN01",
+"title": "Advanced uses of direction complement \"-qilai\""
+},
+{
+"id": "ASGT0GYL",
+"title": "Complement \"-huai le\""
+},
+{
+"id": "ASGM5ZAB",
+"title": "Complement \"-zhao\""
+},
+{
+"id": "ASGCUSIV",
+"title": "Tricky uses of \"dao\""
+},
+{
+"id": "ASGYJQAG",
+"title": "Using \"lai\" and \"qu\" when \"verbing around\""
+},
+{
+"id": "ASG98C1A",
+"title": "Expressing \"as long as\" with \"zhiyao\""
+},
+{
+"id": "ASGU3ZV1",
+"title": "Expressing \"once...then...\" with \"yidan...jiu...\""
+},
+{
+"id": "ASG9E9A6",
+"title": "Expressing \"only after\" with \"cai\""
+},
+{
+"id": "ASGJDV3Y",
+"title": "Expressing \"only if\" with \"zhiyou\""
+},
+{
+"id": "ASGMD0YY",
+"title": "Expressing \"unless\" with \"chufei\""
+},
+{
+"id": "ASGBUXN7",
+"title": "Expressing \"even if…\" with \"jishi\""
+},
+{
+"id": "ASGF1TQ2",
+"title": "Expressing \"even if…\" with \"jiushi\""
+},
+{
+"id": "ASGLI513",
+"title": "Expressing \"even if…\" with \"jiusuan\""
+},
+{
+"id": "ASGXX3NY",
+"title": "Expressing \"even if…\" with \"napa\""
+},
+{
+"id": "ASGHNDX4",
+"title": "Expressing \"if… then…\" with \"jiaru\""
+},
+{
+"id": "ASGN4S8O",
+"title": "Expressing \"if… then…\" with \"yaoshi\""
+},
+{
+"id": "ASG25773",
+"title": "Expressing \"what if\" with \"wanyi\""
+},
+{
+"id": "ASGB0MXK",
+"title": "Marking a topic with \"de hua\""
+},
+{
+"id": "ASG0NDS6",
+"title": "Expressing \"no matter\" with \"buguan\""
+},
+{
+"id": "ASG6ZI8L",
+"title": "Expressing \"no matter\" with \"wulun\""
+},
+{
+"id": "ASGQRS3P",
+"title": "Advanced uses of \"ba\""
+},
+{
+"id": "ASGF273F",
+"title": "Advanced uses of \"lian\""
+},
+{
+"id": "ASG8DVSO",
+"title": "Basic comparisons with \"bu bi\""
+},
+{
+"id": "ASGXGADL",
+"title": "Conditions with \"yao\" and \"jiu\""
+},
+{
+"id": "ASGP8DXU",
+"title": "Expressing \"any\" with \"renhe\""
+},
+{
+"id": "ASGZRPCK",
+"title": "Expressing \"both… and…\" with \"ji...you\""
+},
+{
+"id": "ASG3IR71",
+"title": "Expressing \"can't do without\" with \"shaobuliao\""
+},
+{
+"id": "ASGB449A",
+"title": "Expressing \"equal to\" with \"dengyu\""
+},
+{
+"id": "ASGEB7F5",
+"title": "Expressing \"from\" with \"cong... zhong\""
+},
+{
+"id": "ASGL4O5E",
+"title": "Expressing indifference with \"jiu\""
+},
+{
+"id": "ASGBA782",
+"title": "Expressing \"no\" (noun) \"to\" (verb) with \"wu... ke...\""
+},
+{
+"id": "ASGUQ861",
+"title": "Expressing \"not even one\""
+},
+{
+"id": "ASGF9320",
+"title": "Expressing \"not only..., even...\" using \"budan..., shenzhi lian\""
+},
+{
+"id": "ASG18JOA",
+"title": "Expressing purpose with \"hao\""
+},
+{
+"id": "ASGD19DA",
+"title": "Expressing \"related to...\" with \"you guan de\""
+},
+{
+"id": "ASG1QB4K",
+"title": "Expressing simultaneous actions with \"yimian\""
+},
+{
+"id": "ASGC4C1F",
+"title": "Expressing \"so-called\" with \"suowei\""
+},
+{
+"id": "ASGB44F6",
+"title": "Expressing \"the more... the more...\" with \"yue… yue…\""
+},
+{
+"id": "ASGEXR6R",
+"title": "Expressing the only two possibilities"
+},
+{
+"id": "ASG5A494",
+"title": "Expressing \"within\" a period of time using \"zai... nei\""
+},
+{
+"id": "ASGF3F2Y",
+"title": "Expressing \"would rather\" with \"ningke\""
+},
+{
+"id": "ASGYXI5X",
+"title": "Providing two options with double \"huozhe\""
+},
+{
+"id": "ASGR6Q2J",
+"title": "Expressing \"let alone\" with \"bie shuo\""
+},
+{
+"id": "ASGHOI8S",
+"title": "Expressing \"let alone\" with \"geng buyong shuo\""
+},
+{
+"id": "ASGJ1VZQ",
+"title": "Many types of \"not only... but also...\""
+},
+{
+"id": "ASG56QKW",
+"title": "Comparing \"benlai\" and \"yuanlai\""
+},
+{
+"id": "ASGLOS9C",
+"title": "Comparing \"cai\" and \"jiu\""
+},
+{
+"id": "ASGE09B4",
+"title": "Comparing \"changchang\" and \"wangwang\""
+},
+{
+"id": "ASGTBHBG",
+"title": "Comparing \"zai\" and \"you\""
+},
+{
+"id": "ASGT8AUA",
+"title": "Comparing \"zongsuan\" and “zhongyu\""
+},
+{
+"id": "ASGC5Y86",
+"title": "Comparing \"gen\" and \"dui\""
+},
+{
+"id": "ASGIHS2L",
+"title": "Comparing \"chao\" \"xiang\" and \"wang\""
+},
+{
+"id": "ASG3JELV",
+"title": "Comparing \"dui\" and \"duiyu\""
+},
+{
+"id": "ASGC01S0",
+"title": "Comparing \"duiyu\" and \"zhiyu\""
+},
+{
+"id": "ASG863DE",
+"title": "Comparing \"gei\" and \"wei\""
+},
+{
+"id": "ASG1HNBU",
+"title": "Comparing \"guanyu\" and \"duiyu\""
+},
+{
+"id": "ASGVDOXL",
+"title": "Comparing \"shihe\" and \"heshi\""
+},
+{
+"id": "ASGJOGGG",
+"title": "Comparing \"pingshi\" and \"pingchang\""
+},
+{
+"id": "ASGC3SCN",
+"title": "Comparing \"yihou\" and \"zhihou\""
+},
+{
+"id": "ASGNPJ7T",
+"title": "Comparing \"yihou\" \"ranhou\" \"houlai\""
+},
+{
+"id": "ASG54932",
+"title": "Comparing \"kanqilai\" and \"kanlai\""
+},
+{
+"id": "ASGKQEG9",
+"title": "Comparing \"xiande\" and \"kanqilai\""
+}
+]
+},
+{
+"level": 5,
+"label": "HSK 6–9",
+"cefr": "C1",
+"points": [
+{
+"id": "ASGXXP6M",
+"title": "Advanced usages of the contrary \"dao\""
+},
+{
+"id": "ASGA1B87",
+"title": "Emphasizing with \"henshi\""
+},
+{
+"id": "ASGJIFI9",
+"title": "Expressing \"a full\" with \"zuzu\""
+},
+{
+"id": "ASG47D26",
+"title": "Expressing \"again and again\" with \"yizai\""
+},
+{
+"id": "ASG38F8A",
+"title": "Expressing \"all\" with \"fanshi\""
+},
+{
+"id": "ASGDU0XL",
+"title": "Expressing \"always previously\" with \"xianglai\""
+},
+{
+"id": "ASGC11D0",
+"title": "Expressing \"as expected\" with \"guoran\""
+},
+{
+"id": "ASGB316B",
+"title": "Expressing \"as if\" with \"sihu\""
+},
+{
+"id": "ASGFZOLQ",
+"title": "Expressing \"contrary to expectations\" with \"pianpian\""
+},
+{
+"id": "ASGAA381",
+"title": "Expressing \"even so\" with \"zaibu... ye...\""
+},
+{
+"id": "ASGC8A38",
+"title": "Expressing \"no exception\" with \"yilu\""
+},
+{
+"id": "ASGW0911",
+"title": "Expressing \"nothing but\" with \"wufei\""
+},
+{
+"id": "ASG0D90L",
+"title": "Expressing the unexpected with \"jingran\""
+},
+{
+"id": "ASGMDJTD",
+"title": "Expressing \"when the time comes\" with \"dao shihou\""
+},
+{
+"id": "ASG3AD49",
+"title": "Expressing \"why\" with \"hebi\""
+},
+{
+"id": "ASGPV5Z2",
+"title": "Expressing that something has already happened with \"laizhe\""
+},
+{
+"id": "ASGCC713",
+"title": "Expressing \"as well as\" with \"yiji\""
+},
+{
+"id": "ASGF561D",
+"title": "Expressing \"in short\" with \"zongzhi\""
+},
+{
+"id": "ASG3GX2H",
+"title": "Indicating contrast with \"ze\""
+},
+{
+"id": "ASG0A67E",
+"title": "\"In order to avoid\" with \"yimian\""
+},
+{
+"id": "ASGH4A7W",
+"title": "Expressing \"your side\" with \"ben\""
+},
+{
+"id": "ASGDZIO0",
+"title": "Indicating a characteristic with \"xing\""
+},
+{
+"id": "ASGNLGGX",
+"title": "Expressing \"is or is not\" with \"shifou\""
+},
+{
+"id": "ASGBAIMA",
+"title": "Expressing possession with \"zhi\""
+},
+{
+"id": "ASGTVKAR",
+"title": "Expressing \"whether or not\" with \"yufou\""
+},
+{
+"id": "ASGVBH2H",
+"title": "Using the particle \"bei\""
+},
+{
+"id": "ASGC1BI5",
+"title": "Expressing \"in light of\" with \"jianyu\""
+},
+{
+"id": "ASG50DR1",
+"title": "Adding emphasis with \"fei....buke\""
+},
+{
+"id": "ASG5HZG6",
+"title": "\"Could it be that\" with \"qibushi\""
+},
+{
+"id": "ASGKU8FU",
+"title": "Expressing \"at the same time\" with \"jian\""
+},
+{
+"id": "ASGYYOXD",
+"title": "Expressing \"could it be possible that\" with \"mofei\""
+},
+{
+"id": "ASGLQNS3",
+"title": "Expressing \"from this\" with \"youci\""
+},
+{
+"id": "ASGK0ZG7",
+"title": "Expressing “must\" with \"feidei\""
+},
+{
+"id": "ASGGI66V",
+"title": "Expressing \"nothing is more...than\" with \"moguoyu\""
+},
+{
+"id": "ASGWI5CV",
+"title": "Expressing \"rather than...\" with \"yuqi... buru\""
+},
+{
+"id": "ASGA77KW",
+"title": "Expressing \"similar to\" with \"gen... shide\""
+},
+{
+"id": "ASGMCX2H",
+"title": "Expressing \"to be worthy of\" with \"bukuishi\""
+},
+{
+"id": "ASGU98B7",
+"title": "Expressing who is in charge with \"you... zuozhu\""
+},
+{
+"id": "ASGK4CGK",
+"title": "Stating two or more reasons with \"yilai...erlai\""
+},
+{
+"id": "ASGWSSQL",
+"title": "Using \"yi... wei...\""
+},
+{
+"id": "ASGOR3M4",
+"title": "Expressing \"I bet\" using \"liang\""
+},
+{
+"id": "ASGA632B",
+"title": "Expressing \"lies in\" with \"zaiyu\""
+},
+{
+"id": "ASGE2U25",
+"title": "Expressing something is \"not worth doing\" with \"buxie\""
+},
+{
+"id": "ASGXU2H4",
+"title": "Facilitating an outcome with \"yibian\""
+},
+{
+"id": "ASGL1V0A",
+"title": "Using \"because\" with \"er\" to indicate effect"
+},
+{
+"id": "ASGVRGW2",
+"title": "Expressing \"if… then…\" with \"jiashi\""
+},
+{
+"id": "ASG6509E",
+"title": "Explaining purpose with \"wei... er...\""
+},
+{
+"id": "ASG9D48A",
+"title": "Expressing \"in the name of\" with \"yi... de mingyi\""
+},
+{
+"id": "ASG3ZS9G",
+"title": "Expressing \"let alone\" with \"hekuang\""
+},
+{
+"id": "ASGEA938",
+"title": "Comparing \"anzhao\" and \"genju\""
+},
+{
+"id": "ASG73H8K",
+"title": "Comparing \"budebu\" and \"zhihao\""
+},
+{
+"id": "ASGIKHUH",
+"title": "Comparing \"buduan\" and \"buting\""
+},
+{
+"id": "ASG0K25S",
+"title": "Comparing \"fan'er\" and “que\""
+},
+{
+"id": "ASG9JK0B",
+"title": "Comparing \"genben\" and \"daodi\""
+},
+{
+"id": "ASGXJYJD",
+"title": "Comparing \"genju\" and \"ju\""
+},
+{
+"id": "ASGGXSIR",
+"title": "Comparing \"huifu\" and \"huanyuan\""
+},
+{
+"id": "ASGCZ37R",
+"title": "Comparing \"juran\" and \"fan'er\""
+},
+{
+"id": "ASGBVSWQ",
+"title": "Comparing \"yishi\" and \"yidu\""
+},
+{
+"id": "ASGVEP8S",
+"title": "Comparing \"yizhi\" and \"yixiang\""
+},
+{
+"id": "ASG84D65",
+"title": "Comparing \"bici\" and \"duifang\""
+},
+{
+"id": "ASGFNS52",
+"title": "Comparing \"fan'er\" and “xiangfan\""
+}
+]
+}
+]

@@ -8,5 +8,6 @@
   "meaning_fields": ["SimpleMeaning", "Definitions"],
   "mature_days": 21,
   "mastered_days": 90,
-  "weak_lapses": 3
+  "weak_lapses": 3,
+  "deck_widget": true
 }

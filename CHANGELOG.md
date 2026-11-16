@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 (2026-11-16)
+
+- **Grammar view**: the grammar points of each level, from the Chinese
+  Grammar Wiki (495 points, with links), about 140 of them with a short
+  note, pattern and example sentences with pinyin, including 过, 着, the
+  three de (的, 得, 地), 了, 把, 被 and the complements. The tile next to
+  each point shows how well you know its key character or word; Find
+  searches the points. Data in `data/grammar/`.
+- **Summary on the deck list**: one bar per level under Anki's deck list
+  with "+N this week" and an Open link. Built in the background and cached,
+  so the deck list stays fast. "Show a progress summary on the deck list"
+  in Settings (config key `deck_widget`) turns it off.
+
 ## 1.2.0 (2026-11-16)
 
 - **Words view**: one tile per word, grouped by the words' HSK levels,

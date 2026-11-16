@@ -27,10 +27,15 @@ it, with a progress bar for each level.
 
   A character takes the best colour among all cards whose word contains it,
   so 学 turns green once you know 学习 *or* 学生.
-- **Two views.** *Characters* groups by the official HSK 3.1 character
+- **Three views.** *Characters* groups by the official HSK 3.1 character
   list (or by your deck's word levels; see below). *Words* shows one tile
   per word, grouped by the words' own HSK levels, which is what the exam
-  actually counts.
+  actually counts. *Grammar* lists the grammar points of each level (from
+  the Chinese Grammar Wiki, with links), many with a short note and
+  example sentences; the tile next to each point shows how well you know
+  its key character or word (过, 着, 的, 得, 地, 把, 被 …).
+- **Summary on the deck list:** one bar per level under Anki's deck list,
+  with "+N this week" and an Open link. Turn it off in Settings.
 - **Progress bars** for each level and for all levels together, with
   "studied", "mature" and "mastered" numbers, and **"+N this week"** for
   what you started in the last 7 days.
@@ -53,6 +58,10 @@ it, with a progress bar for each level.
 ![Words view: one tile per word, grouped by HSK level](screenshots/words.png)
 
 ![Character page for 学: its 52 words by level](screenshots/character.png)
+
+![Grammar view: HSK 1 points with notes and examples](screenshots/grammar.png)
+
+![Summary on the deck list](screenshots/deck-list.png)
 
 ![Hovering 几 shows jǐ, how much/many?](screenshots/hover.png)
 
@@ -125,6 +134,7 @@ Click **⚙ Settings** in the grid, or select Hanzi Grid in
 | Mature from | Interval in days from which a card counts as mature. | 21 days |
 | Mastered from | Interval in days from which a card counts as mastered (at least the mature value). | 90 days |
 | Weak from | How often you must have forgotten a card (lapses) for its tile to get a red dot. | 3 lapses |
+| Show a progress summary on the deck list | The small bars under Anki's deck list. | on |
 
 The defaults fit the [Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi)
 "New HSK (2025)" deck. For other decks, pick your deck and its field names.
@@ -203,6 +213,10 @@ only reads your collection. The only thing it writes is its own settings, in
   a list).
 - In the Settings deck list, subdecks of a ticked deck show as unticked but
   are counted.
+- The Grammar view's levels follow the Chinese Grammar Wiki's bands (A1 =
+  HSK 1 … C1 = HSK 6–9); the official HSK 3.0 grammar syllabus may place a
+  point differently. About 140 of the 495 points have notes so far; the
+  rest link to the wiki article.
 - The preview window builds on internal parts of Anki's own previewer, so a
   future Anki version may need a small update.
 
@@ -213,6 +227,8 @@ only reads your collection. The only thing it writes is its own settings, in
 | `__init__.py` | Adds **Tools → Hanzi Grid**, builds the grid in the background, shows the window. |
 | `grid_data.py` | Reads notes and cards and builds the groups. No user interface code, so it can be tested outside Anki. |
 | `previewer.py` | The preview window, a small subclass of Anki's own card previewer. |
+| `deck_widget.py` | The summary under the deck list (built in the background and cached). |
+| `data/grammar/` | The grammar points and notes for the Grammar view; see `SOURCE.md` there. |
 | `settings.py` | The Settings window, built from standard Qt widgets. |
 | `config.json` / `config.md` | Default settings and a description of each key. |
 | `manifest.json` | Name, version and minimum Anki version, read when installing a `.ankiaddon` file. |
@@ -250,6 +266,14 @@ Stones, © 2025, licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), copied
 unchanged. Those files stay under CC BY-SA 4.0; see
 [data/hsk3.1/SOURCE.md](data/hsk3.1/SOURCE.md).
+
+The Grammar view's list of grammar points (titles and links in
+`data/grammar/index.json`) comes from the
+[Chinese Grammar Wiki](https://resources.allsetlearning.com/chinese/grammar/)
+by AllSet Learning, licensed under
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). The
+notes and example sentences in `points.json` were written for Hanzi Grid;
+see [data/grammar/SOURCE.md](data/grammar/SOURCE.md).
 
 Inspired by the character overview in Duolingo's Chinese course and by the
 Kanji Grid add-on for Anki. Hanzi Grid is written from scratch and isn't

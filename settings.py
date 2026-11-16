@@ -23,6 +23,7 @@ from __future__ import annotations
 
 from aqt import mw
 from aqt.qt import (
+    QCheckBox,
     QComboBox,
     QDialog,
     QDialogButtonBox,
@@ -138,6 +139,11 @@ class SettingsDialog(QDialog):
         self.weak_lapses.setValue(config.get("weak_lapses", 3))
         form.addRow("Weak from:", self.weak_lapses)
 
+        # --- Deck list summary --------------------------------------------
+        self.deck_widget = QCheckBox("Show a progress summary on the deck list")
+        self.deck_widget.setChecked(bool(config.get("deck_widget", True)))
+        form.addRow("", self.deck_widget)
+
         # --- Save / Cancel -------------------------------------------------
         buttons = QDialogButtonBox(
             QDialogButtonBox.StandardButton.Save | QDialogButtonBox.StandardButton.Cancel
@@ -146,7 +152,7 @@ class SettingsDialog(QDialog):
         qconnect(buttons.rejected, self.reject)
         form.addRow(buttons)
 
-        self.resize(460, 660)
+        self.resize(460, 690)
 
     def accept(self) -> None:
         """Save was clicked: copy the widgets' values into the config."""
@@ -166,6 +172,7 @@ class SettingsDialog(QDialog):
         # Mastered can't come before mature.
         self.config["mastered_days"] = max(self.mastered_days.value(), self.mature_days.value())
         self.config["weak_lapses"] = self.weak_lapses.value()
+        self.config["deck_widget"] = self.deck_widget.isChecked()
 
         super().accept()  # closes the dialog
         self.on_save(self.config)  # __init__.py saves it and rebuilds the grid

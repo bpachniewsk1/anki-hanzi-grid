@@ -124,6 +124,9 @@ MASTERED = 4  # interval of mastered_days or more, and MASTERED_REVIEWS
 # very late can give a card a 100+ day interval after only 2 or 3 answers.
 MASTERED_REVIEWS = 3
 
+# "Studied this week" means first answered in the last 7 days.
+WEEK_MS = 7 * 24 * 60 * 60 * 1000
+
 # Anki's card "type" column: 0 new, 1 learning, 2 review, 3 relearning.
 CARD_NEW, CARD_LEARN, CARD_REVIEW, CARD_RELEARN = 0, 1, 2, 3
 # Anki's card "queue" column for suspended cards.

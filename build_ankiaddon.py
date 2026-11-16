@@ -25,6 +25,7 @@ INCLUDE = [
     "__init__.py",
     "grid_data.py",
     "previewer.py",
+    "deck_widget.py",
     "settings.py",
     "config.json",
     "config.md",
