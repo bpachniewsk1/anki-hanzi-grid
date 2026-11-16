@@ -27,10 +27,13 @@ it, with a progress bar for each level.
 
   A character takes the best colour among all cards whose word contains it,
   so 学 turns green once you know 学习 *or* 学生.
-- **Three views.** *Characters* groups by the official HSK 3.1 character
+- **Four views.** *Characters* groups by the official HSK 3.1 character
   list (or by your deck's word levels; see below). *Words* shows one tile
   per word, grouped by the words' own HSK levels, which is what the exam
-  actually counts. *Grammar* lists the grammar points of each level (from
+  actually counts. *Measure words* groups words by the classifier they
+  take (本 → 书, 课本, 杂志 …; from CC-CEDICT), by level inside, with the
+  measure word's own tile and progress bar; or by level first. Hover boxes
+  in every view show a word's measure word. *Grammar* lists the grammar points of each level (from
   the Chinese Grammar Wiki, with links), each with a short note and
   example sentences; the tile next to each point shows how well you know
   its key character or word (过, 着, 的, 得, 地, 把, 被 …).
@@ -58,6 +61,8 @@ it, with a progress bar for each level.
 ![Words view: one tile per word, grouped by HSK level](screenshots/words.png)
 
 ![Character page for 学: its 52 words by level](screenshots/character.png)
+
+![Measure words view: words grouped by classifier](screenshots/measure-words.png)
 
 ![Grammar view: HSK 1 points with notes and examples](screenshots/grammar.png)
 
@@ -228,6 +233,7 @@ only reads your collection. The only thing it writes is its own settings, in
 | `previewer.py` | The preview window, a small subclass of Anki's own card previewer. |
 | `deck_widget.py` | The summary under the deck list (built in the background and cached). |
 | `data/grammar/` | The grammar points and notes for the Grammar view; see `SOURCE.md` there. |
+| `data/classifiers/` | Which measure word each word takes, from CC-CEDICT; see `SOURCE.md` there. |
 | `settings.py` | The Settings window, built from standard Qt widgets. |
 | `config.json` / `config.md` | Default settings and a description of each key. |
 | `manifest.json` | Name, version and minimum Anki version, read when installing a `.ankiaddon` file. |
@@ -265,6 +271,12 @@ Stones, © 2025, licensed under
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), copied
 unchanged. Those files stay under CC BY-SA 4.0; see
 [data/hsk3.1/SOURCE.md](data/hsk3.1/SOURCE.md).
+
+The measure-word data in `data/classifiers/classifiers.json` was
+extracted from [CC-CEDICT](https://cc-cedict.org/), licensed under
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/); the file
+keeps that licence. See
+[data/classifiers/SOURCE.md](data/classifiers/SOURCE.md).
 
 The Grammar view's list of grammar points (titles and links in
 `data/grammar/index.json`) comes from the

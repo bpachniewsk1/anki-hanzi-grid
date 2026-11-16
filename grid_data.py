@@ -79,6 +79,7 @@ class Entry(NamedTuple):
     card_id: int  # the card to preview (the note's first card type)
     lapses: int  # how often you forgot it (most among the note's cards)
     studied_at: int | None  # time of your first answer, in ms (None: never)
+    classifiers: tuple[str, ...]  # its measure words, e.g. ("本", "册")
 
 
 class Tile(NamedTuple):
@@ -258,6 +259,7 @@ def collect(
     official_levels: dict[str, tuple[int, str]] | None = None,
     pinyin_field: str = "",
     meaning_fields: list[str] | None = None,
+    classifiers: dict[str, list[str]] | None = None,
 ) -> Grid:
     """Read the collection and build the Grid (see the Grid class).
 
@@ -272,7 +274,11 @@ def collect(
 
     Both views list HSK levels in order, then "Other": characters with no
     level that you have studied, and words with no level.
+
+    `classifiers` maps words to their measure words (data/classifiers);
+    each Entry gets the ones for its word.
     """
+    classifiers = classifiers or {}
 
     # 1. Read the cards (only those in `decks`) and keep each note's best
     #    status. A note can have several cards (e.g. recognition + writing).
@@ -377,6 +383,7 @@ def collect(
                 note_card[note_id][1],
                 note_lapses[note_id],
                 note_studied.get(note_id),
+                tuple(classifiers.get(text, ())),
             )
         )
 
@@ -441,6 +448,14 @@ def collect(
         char_groups.append(("Other", other))
 
     # 6. The same for words, by their own level field, in deck order.
+    return Grid(char_groups, level_groups(entries), entries, tiles)
+
+
+GENERAL_CLASSIFIER = "个"
+
+
+def level_groups(entries: list[Entry]) -> list[tuple[str, list[Entry]]]:
+    """Group entries by their level field, in level order, "Other" last."""
     groups = {}
     other = []
     for entry in entries:
@@ -448,8 +463,33 @@ def collect(
             groups.setdefault(entry.level, (entry.label, []))[1].append(entry)
         else:
             other.append(entry)
-    word_groups = [groups[level] for level in sorted(groups)]
+    result = [groups[level] for level in sorted(groups)]
     if other:
-        word_groups.append(("Other", other))
+        result.append(("Other", other))
+    return result
 
-    return Grid(char_groups, word_groups, entries, tiles)
+
+def by_classifier(entries: list[Entry]) -> list[tuple[str, list[tuple[str, list[Entry]]]]]:
+    """[(classifier, [(level label, entries), ...]), ...]: the words that
+    take each measure word, by level. Measure words with the most words
+    come first; 个, the general one, goes last."""
+    words = {}  # classifier -> [entries]
+    for entry in entries:
+        for classifier in entry.classifiers:
+            words.setdefault(classifier, []).append(entry)
+    order = sorted(words, key=lambda c: (c == GENERAL_CLASSIFIER, -len(words[c]), c))
+    return [(c, level_groups(words[c])) for c in order]
+
+
+def by_level_classifier(entries: list[Entry]) -> list[tuple[str, list[tuple[str, list[Entry]]]]]:
+    """[(level label, [(classifier, entries), ...]), ...]: for each level,
+    its measure words and the words of that level that take them."""
+    result = []
+    for label, items in level_groups([e for e in entries if e.classifiers]):
+        words = {}
+        for entry in items:
+            for classifier in entry.classifiers:
+                words.setdefault(classifier, []).append(entry)
+        order = sorted(words, key=lambda c: (c == GENERAL_CLASSIFIER, -len(words[c]), c))
+        result.append((label, [(c, words[c]) for c in order]))
+    return result

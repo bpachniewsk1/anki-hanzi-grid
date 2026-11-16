@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0 (2026-11-16)
+
+- **Measure words view**: words grouped by the classifier they take
+  (本 → 书, 课本, 杂志 …), by HSK level inside, each measure word with
+  its own tile, pinyin, gloss and progress bar; 个 last and collapsed.
+  "Group by" switches to level first (config key `measure_by`). Data for
+  1,452 words from CC-CEDICT (CC BY-SA 4.0) in `data/classifiers/`.
+- Hover boxes in the Words view and the character page now show a word's
+  measure word(s).
+
 ## 1.3.1 (2026-11-16)
 
 - Grammar view: every one of the 496 grammar points now has a note with a

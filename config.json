@@ -2,6 +2,7 @@
   "decks": ["Anki xiehanzi"],
   "levels": "hsk3.1",
   "view": "chars",
+  "measure_by": "classifier",
   "hanzi_fields": ["Simplified"],
   "level_field": "HskLevel",
   "pinyin_field": "Pinyin",

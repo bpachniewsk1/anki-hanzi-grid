@@ -20,6 +20,7 @@ How the add-on is split up
 - settings.py   the Settings window (decks, level source, fields …).
 - data/hsk3.1/  the official HSK 3.1 character lists (see SOURCE.md there).
 - data/grammar/ the grammar points and notes for the Grammar view.
+- data/classifiers/ which measure word each word takes (Measure words view).
 - config.json   default settings; you can edit them under
                 Tools > Add-ons > Hanzi Grid > Config. config.md is the help
                 text Anki shows next to that editor.
@@ -53,10 +54,14 @@ DATA_FOLDER = os.path.join(os.path.dirname(__file__), "data", "hsk3.1")
 OFFICIAL = "hsk3.1"
 FROM_DECK = "deck"
 
-# The three views (config key "view").
+# The four views (config key "view").
 CHARS = "chars"
 WORDS = "words"
 GRAMMAR = "grammar"
+MEASURE = "measure"
+
+# The measure-word data (see data/classifiers/SOURCE.md).
+CLASSIFIER_FILE = os.path.join(os.path.dirname(__file__), "data", "classifiers", "classifiers.json")
 
 # The grammar notes (see data/grammar/SOURCE.md).
 GRAMMAR_FOLDER = os.path.join(os.path.dirname(__file__), "data", "grammar")
@@ -186,6 +191,18 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 .gp .todo { color: var(--fg-subtle, gray); font-style: italic; }
 .gcount { color: var(--fg-subtle, gray); font-size: .9em; margin: .2em 0 .5em; }
 
+/* The Measure words view: one collapsible block per measure word. */
+.mw { margin: .5em 0; border: 1px solid var(--border-subtle, #ddd); border-radius: 6px; }
+.mw.hide { display: none; }
+.mw summary { padding: .5em .8em; cursor: pointer; display: flex; align-items: center; gap: .6em; flex-wrap: wrap; }
+.mw summary::-webkit-details-marker { display: none; }
+.mw summary .tile { font-size: 18px; height: 1.6em; min-width: 1.6em; flex: none; }
+.mw summary .hz { font-size: 22px; }
+.mw summary .gloss { color: var(--fg-subtle, gray); font-size: .9em; }
+.mw summary .pat { color: var(--fg-subtle, gray); font-size: .9em; margin-left: auto; white-space: nowrap; }
+.mw .body { padding: .2em .9em .8em; border-top: 1px solid var(--border-subtle, #eee); }
+.mw .body h3 { margin: .8em 0 .3em; }
+
 /* Status colours, shared by tiles and progress bars. */
 .s0 { border: 1px solid var(--border-subtle, #ccc); color: var(--fg-subtle, gray); }
 .s1 { background: #f2c14e; color: #222; }
@@ -279,7 +296,7 @@ find.addEventListener("input", () => {
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-open]");
   if (!button) return;
-  for (const point of document.querySelectorAll(".gp")) point.open = button.dataset.open === "1";
+  for (const point of document.querySelectorAll(".gp, .mw")) point.open = button.dataset.open === "1";
 });
 """
 
@@ -288,7 +305,12 @@ document.addEventListener("click", (event) => {
 VIEW_CHOICES = [
     (CHARS, "Characters"),
     (WORDS, "Words"),
+    (MEASURE, "Measure words"),
     (GRAMMAR, "Grammar"),
+]
+MEASURE_CHOICES = [
+    ("classifier", "Measure word"),
+    ("level", "HSK level"),
 ]
 LEVEL_CHOICES = [
     (OFFICIAL, "Official HSK 3.1 list"),
@@ -318,6 +340,12 @@ WORD_LEVEL_NOTE = (
     "Word levels come from each note's HSK level field. Words without one "
     "are listed under Other."
 )
+MEASURE_NOTE = (
+    "Which measure word (classifier) each word takes, from <b>CC-CEDICT</b> "
+    "(CC BY-SA 4.0). It marks mainly concrete nouns; a word that isn't listed "
+    "usually takes 个. The tile in each heading is the measure word itself, "
+    "coloured by how well you know it."
+)
 GRAMMAR_NOTE = (
     "Grammar points from the <b>Chinese Grammar Wiki</b> (AllSet Learning, "
     "CC BY-NC-SA 4.0), grouped by the HSK levels the wiki aligns its bands to. "
@@ -338,6 +366,10 @@ CLICK_HINTS = {
         "words you keep forgetting."
     ),
     GRAMMAR: "Click a grammar point to open it. Use Find to search by word or pattern.",
+    MEASURE: (
+        "Hover a word for its pinyin and meaning. Click it to see the answer "
+        "side of its card; Shift+click to open the Browser."
+    ),
 }
 
 
@@ -419,7 +451,12 @@ def entry_hover(entry: grid_data.Entry, config: dict) -> str:
     if entry.lapses >= config.get("weak_lapses", 3):
         footer.append(f"forgotten {entry.lapses}×")
     word = entry.word
-    return head_html(word.text, word.pinyin, word.meaning) + f"<div class='ft'>{escape(' · '.join(footer))}</div>"
+    html = head_html(word.text, word.pinyin, word.meaning)
+    if entry.classifiers:
+        meta = load_classifiers()["meta"]
+        parts = " · ".join(f"{c} ({meta.get(c, ['', ''])[0]})" if meta.get(c, ["", ""])[0] else c for c in entry.classifiers)
+        html += f"<div class='mn'>measure word: {escape(parts)}</div>"
+    return html + f"<div class='ft'>{escape(' · '.join(footer))}</div>"
 
 
 def tile_html(text: str, status: int, hover: str, click: str, shift: str, weak: bool, word: bool) -> str:
@@ -487,12 +524,22 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("<span class='label'>View:</span>" + pills(VIEW_CHOICES, view, "view"))
     if view == CHARS:
         parts.append("<span class='label'>Levels:</span>" + pills(LEVEL_CHOICES, levels, "levels"))
+    if view == MEASURE:
+        measure_by = config.get("measure_by", "classifier")
+        parts.append("<span class='label'>Group by:</span>" + pills(MEASURE_CHOICES, measure_by, "measure_by"))
     parts.append("</div>")
 
     parts.append("<div class='tools'>")
     if view == GRAMMAR:
         parts.append("<span class='pill' data-open='1'>Expand all</span><span class='pill' data-open='0'>Collapse all</span>")
         parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='过, 把, de, if …'>")
+    elif view == MEASURE:
+        parts.append("<span class='pill' data-open='1'>Expand all</span><span class='pill' data-open='0'>Collapse all</span>")
+        parts.append("<span class='label'>Show:</span>")
+        for value, text in SHOW_CHOICES:
+            on = " on" if value == "all" else ""
+            parts.append(f"<span class='pill{on}' data-show='{value}'>{text}</span>")
+        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='书 or 本'>")
     else:
         parts.append("<span class='label'>Show:</span>")
         for value, text in SHOW_CHOICES:
@@ -502,13 +549,13 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("</div>")
 
     deck_text = ", ".join(escape(d) for d in decks) if decks else "all decks"
-    level_note = {CHARS: LEVEL_NOTES[levels], WORDS: WORD_LEVEL_NOTE, GRAMMAR: GRAMMAR_NOTE}[view]
+    level_note = {CHARS: LEVEL_NOTES[levels], WORDS: WORD_LEVEL_NOTE, GRAMMAR: GRAMMAR_NOTE, MEASURE: MEASURE_NOTE}[view]
     parts.append(
         f"<p class='note'>Decks: <b>{deck_text}</b><br>{level_note}<br>{CLICK_HINTS[view]}</p>"
     )
 
-    if view == GRAMMAR:
-        parts.append(grammar_html(grid, config))
+    if view in (GRAMMAR, MEASURE):
+        parts.append(grammar_html(grid, config) if view == GRAMMAR else measure_html(grid, config))
         parts.append("<div id='tip'></div>")
         parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
         return "".join(parts)
@@ -553,6 +600,61 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("<div id='tip'></div>")
     # The Find box behaves differently per view (see JS).
     parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
+    return "".join(parts)
+
+
+_classifiers = None  # the classifier data once loaded
+
+
+def load_classifiers() -> dict:
+    """{"words": {word: [classifiers]}, "meta": {classifier: [pinyin, gloss]}}."""
+    global _classifiers
+    if _classifiers is None:
+        with open(CLASSIFIER_FILE, encoding="utf-8") as file:
+            _classifiers = json.load(file)
+    return _classifiers
+
+
+def classifier_head(classifier: str, grid: grid_data.Grid, config: dict) -> str:
+    """A measure word's tile (its status in your decks), pinyin and gloss."""
+    pinyin, gloss = load_classifiers()["meta"].get(classifier, ["", ""])
+    return (
+        key_tile_html(classifier, grid, config)
+        + f"<span class='hz'>{escape(classifier)}</span><span class='py'>{escape(pinyin)}</span>"
+        + f"<span class='gloss'>{escape(gloss)}</span>"
+    )
+
+
+def measure_html(grid: grid_data.Grid, config: dict) -> str:
+    """The Measure words view: words grouped by the measure word they take
+    (and by level inside), or by level and then measure word."""
+    parts = []
+    if config.get("measure_by", "classifier") == "level":
+        for label, classifiers in grid_data.by_level_classifier(grid.entries):
+            total = len({e.word.text for _, items in classifiers for e in items})
+            parts.append(f"<h2>{escape(label)}</h2><div class='gcount'>{len(classifiers)} measure words · {total} words</div>")
+            for classifier, items in classifiers:
+                parts.append("<details class='mw' open><summary>")
+                parts.append(classifier_head(classifier, grid, config))
+                parts.append(f"<span class='pat'>{len(items)} words</span></summary><div class='body'>")
+                parts.append(progress(items))
+                parts.append("<div class='grid'>" + "".join(entry_tile_html(e, config) for e in items) + "</div>")
+                parts.append("</div></details>")
+        return "".join(parts)
+
+    groups = grid_data.by_classifier(grid.entries)
+    with_cl = sum(1 for e in grid.entries if e.classifiers)
+    parts.append(f"<div class='gcount'>{len(groups)} measure words · {with_cl} of {len(grid.entries)} words have one</div>")
+    for classifier, levels in groups:
+        items = [e for _, group in levels for e in group]
+        general = classifier == grid_data.GENERAL_CLASSIFIER
+        parts.append(f"<details class='mw'{'' if general else ' open'}><summary>")
+        parts.append(classifier_head(classifier, grid, config))
+        parts.append(f"<span class='pat'>{len(items)} words{' · the general measure word' if general else ''}</span></summary><div class='body'>")
+        parts.append(progress(items))
+        for label, group in levels:
+            parts.append(f"<h3>{escape(label)}</h3><div class='grid'>" + "".join(entry_tile_html(e, config) for e in group) + "</div>")
+        parts.append("</div></details>")
     return "".join(parts)
 
 
@@ -706,6 +808,9 @@ class HanziGridDialog(QDialog):
         elif cmd.startswith("view:"):
             self.config["view"] = cmd[len("view:"):]
             save_config(self.config)
+        elif cmd.startswith("measure_by:"):
+            self.config["measure_by"] = cmd[len("measure_by:"):]
+            save_config(self.config)
         elif cmd.startswith("char:"):
             self.open_panel(cmd[len("char:"):])
         elif cmd.startswith("card:"):
@@ -830,6 +935,7 @@ def collect(config: dict) -> grid_data.Grid:
         pinyin_field=config.get("pinyin_field", ""),
         meaning_fields=config.get("meaning_fields", []),
         official_levels=grid_data.load_level_lists(DATA_FOLDER) if use_official else None,
+        classifiers=load_classifiers()["words"],
     )
 
 
