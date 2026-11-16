@@ -27,7 +27,7 @@ it, with a progress bar for each level.
 
   A character takes the best colour among all cards whose word contains it,
   so 学 turns green once you know 学习 *or* 学生.
-- **Four views.** *Characters* groups by the official HSK 3.1 character
+- **Five views.** *Characters* groups by the official HSK 3.1 character
   list (or by your deck's word levels; see below). *Words* shows one tile
   per word, grouped by the words' own HSK levels, which is what the exam
   actually counts. *Measure words* groups words by the classifier they
@@ -36,7 +36,11 @@ it, with a progress bar for each level.
   in every view show a word's measure word. *Grammar* lists the grammar points of each level (from
   the Chinese Grammar Wiki, with links), each with a short note and
   example sentences; the tile next to each point shows how well you know
-  its key character or word (过, 着, 的, 得, 地, 把, 被 …).
+  its key character or word (过, 着, 的, 得, 地, 把, 被 …). *Reading*:
+  paste any Chinese text and see every character coloured by your status,
+  "78 % of characters / 75 % of words studied", and the words you haven't
+  studied listed by level, each a click away from its card. Nothing leaves
+  your computer.
 - **Summary on the deck list:** one bar per level under Anki's deck list,
   with "+N this week" and an Open link. Turn it off in Settings.
 - **Two looks:** *Modern* (default: flat, rounded, a fresh green scale) and
@@ -64,6 +68,8 @@ it, with a progress bar for each level.
 ![Words view: one tile per word, grouped by HSK level](screenshots/words.png)
 
 ![Character page for 学: its 52 words by level](screenshots/character.png)
+
+![Reading view: a text coloured by status, with the words to learn](screenshots/reading.png)
 
 ![Measure words view: words grouped by classifier](screenshots/measure-words.png)
 

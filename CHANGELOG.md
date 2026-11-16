@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.0 (2026-11-17)
+
+- **Reading view**: paste any Chinese text. The words are matched against
+  your decks (longest match first), every character is coloured by its
+  status, the line above the text says how much of it you have studied,
+  and the words you haven't studied are listed by level with how often
+  they occur. Hover for pinyin and meaning, click to preview the card.
+  Characters in none of your decks get a dotted red underline. The text
+  is kept between openings. A Sample text button shows how it works.
+- Fix: the page script stopped early in views without a Find box.
+
 ## 1.5.0 (2026-11-16)
 
 - **Modern look** (default): flat rounded tiles, borderless buttons and

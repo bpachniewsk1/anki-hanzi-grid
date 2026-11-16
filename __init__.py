@@ -60,6 +60,7 @@ CHARS = "chars"
 WORDS = "words"
 GRAMMAR = "grammar"
 MEASURE = "measure"
+READING = "reading"
 
 # The measure-word data (see data/classifiers/SOURCE.md).
 CLASSIFIER_FILE = os.path.join(os.path.dirname(__file__), "data", "classifiers", "classifiers.json")
@@ -211,6 +212,24 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 .lv { display: flex; align-items: flex-start; gap: .8em; padding: .35em 0; border-top: 1px dashed var(--border-subtle, #e3e3e3); }
 .lv .lvl { flex: none; width: 4.2em; padding-top: .45em; font-size: .85em; font-weight: bold; color: var(--fg-subtle, gray); }
 
+/* The Reading view. */
+.reading textarea {
+  width: 100%; max-width: 60em; box-sizing: border-box; font: inherit; font-size: 16px; padding: .6em .8em;
+  border: 1px solid var(--border-subtle, #ccc); border-radius: 6px; background: var(--canvas-elevated, white); color: var(--fg, black);
+  font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+}
+.rtext {
+  max-width: 60em; font-size: 24px; line-height: 1.9; margin: .6em 0 1em;
+  font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+}
+.rtext .rw { cursor: pointer; border-radius: 4px; padding: 0 1px; }
+.rtext .rw:hover { outline: 2px solid var(--fg, black); }
+.rtext .rw > span { border-radius: 3px; padding: 0 1px; }
+.rtext .s0, .rtext .rw > .s0 { border: none; background: var(--canvas-inset, #eee); color: var(--fg-subtle, gray); }
+.rtext .nx { border-bottom: 2px dotted #e0393e; color: var(--fg-subtle, gray); }
+.nxnote { color: #e0393e; }
+.tile sup { font-size: .55em; margin-left: .15em; color: var(--fg-subtle, gray); }
+
 /* Status colours, shared by tiles and progress bars. */
 .s0 { border: 1px solid var(--border-subtle, #ccc); color: var(--fg-subtle, gray); }
 .s1 { background: #f2c14e; color: #222; }
@@ -236,7 +255,7 @@ const panelBody = document.getElementById("panel-body");
 
 function hideTip() { tip.style.display = "none"; }
 document.addEventListener("mouseover", (event) => {
-  const tile = event.target.closest(".tile[data-tip]");
+  const tile = event.target.closest("[data-tip]");
   if (!tile) return hideTip();
   tip.innerHTML = tile.dataset.tip;
   tip.style.display = "block";
@@ -272,7 +291,7 @@ document.addEventListener("click", (event) => {
     for (const p of document.querySelectorAll(".pill[data-show]")) p.classList.toggle("on", p === pill);
     return;
   }
-  const tile = event.target.closest(".tile[data-click]");
+  const tile = event.target.closest("[data-click]");
   if (!tile) return;
   hideTip();
   pycmd(event.shiftKey ? tile.dataset.shift : tile.dataset.click);
@@ -282,7 +301,7 @@ document.addEventListener("click", (event) => {
 // In the Characters view, typing a word (学生) also shows its characters.
 // In the Grammar view it searches the titles, patterns and key words.
 const find = document.getElementById("find");
-find.addEventListener("input", () => {
+if (find) find.addEventListener("input", () => {
   const query = find.value.trim();
   const view = document.body.dataset.view;
   if (view === "grammar") {
@@ -339,6 +358,7 @@ VIEW_CHOICES = [
     (WORDS, "Words"),
     (MEASURE, "Measure words"),
     (GRAMMAR, "Grammar"),
+    (READING, "Reading"),
 ]
 MEASURE_CHOICES = [
     ("classifier", "Measure word"),
@@ -379,6 +399,11 @@ MEASURE_NOTE = (
     "coloured by how well you know it. A word that takes several measure "
     "words (狗: 只 or 条) is listed under each."
 )
+READING_NOTE = (
+    "Paste any Chinese text: every character is coloured by how well you "
+    "know it, the words are matched against your decks, and the words you "
+    "haven't studied are listed by level. Nothing leaves your computer."
+)
 GRAMMAR_NOTE = (
     "Grammar points from the <b>Chinese Grammar Wiki</b> (AllSet Learning, "
     "CC BY-NC-SA 4.0), grouped by the HSK levels the wiki aligns its bands to. "
@@ -403,7 +428,22 @@ CLICK_HINTS = {
         "Hover a word for its pinyin and meaning. Click it to see the answer "
         "side of its card; Shift+click to open the Browser."
     ),
+    READING: (
+        "Hover a word in the text for its pinyin and meaning. Click it to see "
+        "its card; Shift+click to open the Browser. A dotted underline marks "
+        "characters that are in none of your decks."
+    ),
 }
+
+# A short text to try the Reading view with (written for the add-on).
+SAMPLE_TEXT = (
+    "我叫小明，今年二十岁，是一名大学生。我每天早上七点起床，先喝一杯咖啡，"
+    "然后坐地铁去学校。我的专业是历史，虽然有点儿难，但是我很喜欢。\n"
+    "周末的时候，我常常和朋友一起去公园跑步，或者在家看电影。上个月我去了北京，"
+    "参观了长城和故宫，还吃了北京烤鸭，味道好极了。明年我想去上海工作，"
+    "所以现在要努力学习，多练习听和说。"
+)
+
 
 
 def percent(part: int, whole: int) -> float:
@@ -566,6 +606,8 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     if view == GRAMMAR:
         parts.append("<span class='pill' data-open='1'>Expand all</span><span class='pill' data-open='0'>Collapse all</span>")
         parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='过, 把, de, if …'>")
+    elif view == READING:
+        parts.append("<span class='pill' data-read='analyse'>Analyse</span><span class='pill' data-read='sample'>Sample text</span><span class='pill' data-read='clear'>Clear</span>")
     elif view == MEASURE:
         parts.append("<span class='pill' data-open='1'>Expand all</span><span class='pill' data-open='0'>Collapse all</span>")
         parts.append("<span class='label'>Show:</span>")
@@ -582,15 +624,22 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("</div>")
 
     deck_text = ", ".join(escape(d) for d in decks) if decks else "all decks"
-    level_note = {CHARS: LEVEL_NOTES[levels], WORDS: WORD_LEVEL_NOTE, GRAMMAR: GRAMMAR_NOTE, MEASURE: MEASURE_NOTE}[view]
+    level_note = {CHARS: LEVEL_NOTES[levels], WORDS: WORD_LEVEL_NOTE, GRAMMAR: GRAMMAR_NOTE, MEASURE: MEASURE_NOTE, READING: READING_NOTE}[view]
     parts.append(
         f"<p class='note'>Decks: <b>{deck_text}</b><br>{level_note}<br>{CLICK_HINTS[view]}</p>"
     )
 
-    if view in (GRAMMAR, MEASURE):
-        parts.append(grammar_html(grid, config) if view == GRAMMAR else measure_html(grid, config))
+    if view in (GRAMMAR, MEASURE, READING):
+        if view == GRAMMAR:
+            parts.append(grammar_html(grid, config))
+        elif view == MEASURE:
+            parts.append(measure_html(grid, config))
+        else:
+            parts.append(reading_html(grid, config))
         parts.append("<div id='tip'></div>")
         parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
+        if view == READING:
+            parts.append(f"<script>{READING_JS}</script>")
         return "".join(parts)
 
     if view == CHARS:
@@ -695,6 +744,135 @@ def level_row(label: str, entries, config: dict) -> str:
     on the right."""
     tiles = "".join(entry_tile_html(e, config) for e in entries)
     return f"<div class='lv'><span class='lvl'>{escape(label)}</span><div class='grid'>{tiles}</div></div>"
+
+
+def reading_html(grid: grid_data.Grid, config: dict) -> str:
+    """The Reading view: a text box, and the data the page needs to colour
+    a text (every character's status, every word's status, level, pinyin,
+    meaning and card), embedded as JSON for the JavaScript below."""
+    chars = {char: tile.status for char, tile in grid.tiles.items()}
+    words = {}
+    for entry in grid.entries:
+        text = entry.word.text
+        if text and text not in words:
+            words[text] = [entry.status, entry.label, entry.word.pinyin, entry.word.meaning, entry.card_id]
+    longest = max((len(w) for w in words), default=1)
+    data = json.dumps(
+        {"chars": chars, "words": words, "longest": min(longest, 8), "names": STATUS_NAMES, "sample": SAMPLE_TEXT},
+        ensure_ascii=False,
+    ).replace("</", "<\\/")
+    return (
+        "<div class='reading'>"
+        "<textarea id='text' rows='7' placeholder='Paste Chinese text here, then click Analyse.'></textarea>"
+        "<div id='stats' class='counts'></div>"
+        "<div id='out' class='rtext'></div>"
+        "<div id='learn'></div>"
+        "</div>"
+        f"<script>window.hgReading = {data};</script>"
+    )
+
+
+# The Reading view's script: splits the text into the longest words your
+# decks know (greedy, left to right), colours every character, and lists
+# the words you haven't studied, by level.
+READING_JS = r"""
+(() => {
+  const data = window.hgReading;
+  const box = document.getElementById("text");
+  const out = document.getElementById("out");
+  const stats = document.getElementById("stats");
+  const learn = document.getElementById("learn");
+  const isHanzi = (ch) => /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/.test(ch);
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+
+  function tip(word, info) {
+    const [status, level, pinyin, meaning] = info;
+    const foot = [data.names[status], level].filter(Boolean).join(" · ");
+    return `<div><span class='hz'>${esc(word)}</span><span class='py'>${esc(pinyin)}</span></div>` +
+      `<div class='mn'>${esc(meaning)}</div><div class='ft'>${esc(foot)}</div>`;
+  }
+
+  function analyse() {
+    const text = box.value;
+    try { localStorage.setItem("hanziGridText", text); } catch (e) {}
+    const html = [];
+    const seen = {};  // word -> count, for the list of words to learn
+    let i = 0, charsTotal = 0, charsKnown = 0, charsMissing = 0, wordsTotal = 0, wordsKnown = 0;
+    const byStatus = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0};
+    while (i < text.length) {
+      const ch = text[i];
+      if (ch === "\n") { html.push("<br>"); i++; continue; }
+      if (!isHanzi(ch)) { html.push(esc(ch)); i++; continue; }
+      // The longest word starting here that your decks contain.
+      let word = null;
+      for (let len = Math.min(data.longest, text.length - i); len >= 1; len--) {
+        const candidate = text.substr(i, len);
+        if (data.words[candidate]) { word = candidate; break; }
+      }
+      if (word) {
+        const info = data.words[word];
+        wordsTotal++;
+        if (info[0] > 0) wordsKnown++;
+        seen[word] = (seen[word] || 0) + 1;
+        let inner = "";
+        for (const c of word) {
+          const s = data.chars[c] ?? 0;
+          charsTotal++; byStatus[s]++;
+          if (s > 0) charsKnown++;
+          inner += `<span class='s${s}'>${esc(c)}</span>`;
+        }
+        html.push(`<span class='rw' data-tip='${esc(tip(word, info))}' data-click='card:${info[4]}' data-shift='search:${esc(word)}'>${inner}</span>`);
+        i += word.length;
+      } else {
+        charsTotal++;
+        const s = data.chars[ch];
+        if (s === undefined) { charsMissing++; byStatus[0]++; html.push(`<span class='rw nx'>${esc(ch)}</span>`); }
+        else { byStatus[s]++; if (s > 0) charsKnown++; html.push(`<span class='rw s${s}' data-shift='search:${esc(ch)}' data-click='char:${esc(ch)}'>${esc(ch)}</span>`); }
+        i++;
+      }
+    }
+    out.innerHTML = html.join("");
+    if (!charsTotal) { stats.textContent = ""; learn.innerHTML = ""; return; }
+    const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+    stats.innerHTML = `<b>${pct(charsKnown, charsTotal)}% of characters</b> studied (${charsKnown} / ${charsTotal})` +
+      ` · <b>${pct(wordsKnown, wordsTotal)}% of words</b> studied (${wordsKnown} / ${wordsTotal})` +
+      ` · mature or better: ${byStatus[3] + byStatus[4]} characters` +
+      (charsMissing ? ` · <span class='nxnote'>${charsMissing} characters in none of your decks</span>` : "");
+    // Words to learn: the matched words you haven't studied, by level,
+    // most frequent in the text first.
+    const groups = {};
+    for (const word of Object.keys(seen)) {
+      const info = data.words[word];
+      if (info[0] > 0) continue;
+      const level = info[1] || "Other";
+      (groups[level] = groups[level] || []).push(word);
+    }
+    const levels = Object.keys(groups).sort((a, b) => (a === "Other") - (b === "Other") || a.localeCompare(b, undefined, {numeric: true}));
+    if (!levels.length) { learn.innerHTML = "<h2>Words to learn</h2><p class='note'>You have studied every word in this text.</p>"; return; }
+    let list = "<h2>Words to learn</h2>";
+    for (const level of levels) {
+      const words = groups[level].sort((a, b) => seen[b] - seen[a]);
+      list += `<div class='lv'><span class='lvl'>${esc(level)}</span><div class='grid'>` + words.map((w) => {
+        const info = data.words[w];
+        return `<span class='tile w s0' data-tip='${esc(tip(w, info))}' data-click='card:${info[4]}' data-shift='search:${esc(w)}'>${esc(w)}` +
+          (seen[w] > 1 ? `<sup>${seen[w]}</sup>` : "") + `</span>`;
+      }).join("") + "</div></div>";
+    }
+    learn.innerHTML = list;
+  }
+
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-read]");
+    if (!button) return;
+    if (button.dataset.read === "sample") box.value = data.sample;
+    if (button.dataset.read === "clear") box.value = "";
+    analyse();
+  });
+  box.addEventListener("keydown", (event) => { if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) analyse(); });
+  try { const saved = localStorage.getItem("hanziGridText"); if (saved) box.value = saved; } catch (e) {}
+  analyse();
+})();
+"""
 
 
 _grammar = None  # (index, points) once loaded

@@ -2,7 +2,7 @@ The easiest way to change these is the **⚙ Settings** button in the grid (the 
 
 - **decks**: names of the decks to count, as shown in the deck list, for example `["Anki xiehanzi"]`. Subdecks are included. `[]` counts every deck. Default: `["Anki xiehanzi"]`.
 - **levels**: where each character's HSK level comes from. `"hsk3.1"`: the official HSK 3.1 character list (2025 syllabus) bundled with the add-on. `"deck"`: the lowest HSK level of any word in the chosen decks that contains the character (uses **level_field**). Default: `"hsk3.1"`.
-- **view**: which view opens: `"chars"` (characters), `"words"`, `"measure"` (measure words) or `"grammar"`. The View buttons in the grid change it. Default: `"chars"`.
+- **view**: which view opens: `"chars"` (characters), `"words"`, `"measure"` (measure words), `"grammar"` or `"reading"`. The View buttons in the grid change it. Default: `"chars"`.
 - **measure_by**: how the Measure words view groups: `"classifier"` (measure word, then level) or `"level"`. Default: `"classifier"`.
 - **hanzi_fields**: names of the fields that hold the Chinese word. Every note type that has one of these fields is scanned. Default: `["Simplified"]`.
 - **level_field**: name of the field that holds the HSK level (for example `HSK 3`). Only used with `"levels": "deck"`. Default: `"HskLevel"`.
