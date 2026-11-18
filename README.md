@@ -36,7 +36,9 @@ it, with a progress bar for each level.
   in every view show a word's measure word. *Grammar* lists the grammar points of each level (from
   the Chinese Grammar Wiki, with links), each with a short note and
   example sentences; the tile next to each point shows how well you know
-  its key character or word (过, 着, 的, 得, 地, 把, 被 …). *Reading*:
+  its key character or word (过, 着, 的, 得, 地, 把, 被 …), and a
+  **checkbox to tick once you've mastered it**, with "12 / 40 mastered"
+  per level and a *To do* filter for what's left. *Reading*:
   paste any Chinese text and see every character coloured by your status,
   "78 % of characters / 75 % of words studied", and the words you haven't
   studied listed by level, each a click away from its card. Nothing leaves
@@ -216,8 +218,11 @@ Open an issue at https://github.com/bpachniewsk1/anki-hanzi-grid/issues. Please 
 ## Privacy
 
 Hanzi Grid works offline. It sends nothing anywhere, collects no data and
-only reads your collection. The only thing it writes is its own settings, in
-`meta.json` in the add-on folder (Anki's usual place for add-on settings).
+only reads your cards and notes. It writes two things: its own settings, in
+`meta.json` in the add-on folder (Anki's usual place for add-on settings),
+and the list of grammar points you've ticked, saved in your collection's
+settings under `hanziGridGrammarDone` so it syncs with AnkiWeb like the rest
+of your collection.
 
 ## Known limits
 

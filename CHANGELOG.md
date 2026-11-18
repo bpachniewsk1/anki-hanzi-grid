@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.7.0 (2026-11-18)
+
+- **Grammar checklist**: a checkbox on every grammar point to tick once
+  you've mastered it. "N / M mastered" with a bar for all levels and for
+  each level, updated as you tick; Show → To do / Mastered filters the
+  list. The ticks are saved in your collection's settings (key
+  `hanziGridGrammarDone`), so they sync with AnkiWeb and survive
+  reinstalling the add-on.
+
 ## 1.6.0 (2026-11-17)
 
 - **Reading view**: paste any Chinese text. The words are matched against

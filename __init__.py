@@ -192,6 +192,19 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 .gp .links a { margin-right: 1em; cursor: pointer; color: var(--fg-link, #0a66c2); text-decoration: underline; }
 .gp .todo { color: var(--fg-subtle, gray); font-style: italic; }
 .gcount { color: var(--fg-subtle, gray); font-size: .9em; margin: .2em 0 .5em; }
+.gprog { max-width: 52em; margin-bottom: .5em; }
+.gcheck {
+  flex: none; width: 1.15em; height: 1.15em; border-radius: 4px; cursor: pointer;
+  border: 2px solid var(--fg-subtle, #999); box-sizing: border-box; position: relative;
+}
+.gcheck:hover { border-color: var(--fg, black); }
+.gp.done .gcheck { background: #2f8f57; border-color: #2f8f57; }
+.gp.done .gcheck::after {
+  content: ""; position: absolute; left: .32em; top: .08em; width: .3em; height: .6em;
+  border: solid #fff; border-width: 0 .14em .14em 0; transform: rotate(45deg);
+}
+.gp.done summary > span:not(.tile):not(.gcheck):not(.pat) { color: var(--fg-subtle, gray); }
+body[data-gshow="todo"] .gp.done, body[data-gshow="done"] .gp:not(.done) { display: none; }
 
 /* The Measure words view: one collapsible block per measure word, with
    a tinted heading, and inside it one row per level. */
@@ -343,6 +356,37 @@ if (find) find.addEventListener("input", () => {
   }
 });
 
+// Grammar checkboxes. preventDefault stops the click from also opening
+// the point. Python stores the ticked points (see on_bridge_cmd).
+function updateGrammarCounts() {
+  for (const prog of document.querySelectorAll(".gprog")) {
+    const band = prog.dataset.band;
+    const sel = band === "all" ? ".gp.done" : `.gp.done[data-band="${CSS.escape(band)}"]`;
+    const n = document.querySelectorAll(sel).length;
+    prog.querySelector(".gdone-n").textContent = n;
+    prog.querySelector(".bar > div").style.width = (100 * n / prog.dataset.total).toFixed(2) + "%";
+  }
+}
+document.addEventListener("click", (event) => {
+  const box = event.target.closest(".gcheck");
+  if (box) {
+    event.preventDefault();
+    event.stopPropagation();
+    const point = box.closest(".gp");
+    const ticked = !point.classList.contains("done");
+    point.classList.toggle("done", ticked);
+    box.setAttribute("aria-checked", ticked ? "true" : "false");
+    updateGrammarCounts();
+    pycmd(`gdone:${ticked ? 1 : 0}:${point.dataset.id}`);
+    return;
+  }
+  const pill = event.target.closest("[data-gshow]");
+  if (pill) {
+    document.body.dataset.gshow = pill.dataset.gshow;
+    for (const p of document.querySelectorAll("[data-gshow]")) p.classList.toggle("on", p === pill);
+  }
+}, true);
+
 // Expand / collapse every grammar point.
 document.addEventListener("click", (event) => {
   const button = event.target.closest("[data-open]");
@@ -423,7 +467,11 @@ CLICK_HINTS = {
         "side of its card; Shift+click to open the Browser. A red dot marks "
         "words you keep forgetting."
     ),
-    GRAMMAR: "Click a grammar point to open it. Use Find to search by word or pattern.",
+    GRAMMAR: (
+        "Click a grammar point to open it. Tick the box on the left once you've "
+        "mastered a point; Show → To do lists what's left. Use Find to search "
+        "by word or pattern."
+    ),
     MEASURE: (
         "Hover a word for its pinyin and meaning. Click it to see the answer "
         "side of its card; Shift+click to open the Browser."
@@ -579,7 +627,7 @@ def pills(choices, current: str, command: str) -> str:
     return "".join(parts)
 
 
-def build_html(grid: grid_data.Grid, config: dict) -> str:
+def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = None) -> str:
     """Turn the Grid from grid_data.collect() into an HTML page body."""
     view = config.get("view", CHARS)
     levels = config.get("levels", OFFICIAL)  # OFFICIAL or FROM_DECK
@@ -605,6 +653,10 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
     parts.append("<div class='tools'>")
     if view == GRAMMAR:
         parts.append("<span class='pill' data-open='1'>Expand all</span><span class='pill' data-open='0'>Collapse all</span>")
+        parts.append("<span class='label'>Show:</span>")
+        for value, text in (("all", "All"), ("todo", "To do"), ("done", "Mastered")):
+            on = " on" if value == "all" else ""
+            parts.append(f"<span class='pill{on}' data-gshow='{value}'>{text}</span>")
         parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='过, 把, de, if …'>")
     elif view == READING:
         parts.append("<span class='pill' data-read='analyse'>Analyse</span><span class='pill' data-read='sample'>Sample text</span><span class='pill' data-read='clear'>Clear</span>")
@@ -631,7 +683,7 @@ def build_html(grid: grid_data.Grid, config: dict) -> str:
 
     if view in (GRAMMAR, MEASURE, READING):
         if view == GRAMMAR:
-            parts.append(grammar_html(grid, config))
+            parts.append(grammar_html(grid, config, grammar_done))
         elif view == MEASURE:
             parts.append(measure_html(grid, config))
         else:
@@ -875,6 +927,24 @@ READING_JS = r"""
 """
 
 
+# The grammar points you've ticked, stored in the collection's own config
+# (not the add-on's), so they sync with AnkiWeb and survive reinstalling.
+GRAMMAR_DONE_KEY = "hanziGridGrammarDone"
+
+
+def load_grammar_done() -> set:
+    return set(mw.col.get_config(GRAMMAR_DONE_KEY, []) or [])
+
+
+def save_grammar_done(point_id: str, ticked: bool) -> None:
+    done = load_grammar_done()
+    if ticked:
+        done.add(point_id)
+    else:
+        done.discard(point_id)
+    mw.col.set_config(GRAMMAR_DONE_KEY, sorted(done))
+
+
 _grammar = None  # (index, points) once loaded
 
 
@@ -905,8 +975,22 @@ def key_tile_html(key: str, grid: grid_data.Grid, config: dict) -> str:
     return f"<span class='tile s0 w'>{escape(key)}</span>"
 
 
-def grammar_html(grid: grid_data.Grid, config: dict) -> str:
-    """The Grammar view: every point by level, as collapsible blocks."""
+def grammar_progress(done: int, total: int, band: str) -> str:
+    """"12 / 40 mastered" with a small bar; the page script keeps it up to
+    date when you tick a point."""
+    width = 100 * done / total if total else 0
+    return (
+        f"<div class='gprog' data-band='{escape(band, quote=True)}' data-total='{total}'>"
+        f"<div class='bar'><div class='s3' style='width:{width:.2f}%'></div></div>"
+        f"<div class='counts'><b class='gdone-n'>{done}</b> / {total} mastered</div></div>"
+    )
+
+
+def grammar_html(grid: grid_data.Grid, config: dict, done: set | None = None) -> str:
+    """The Grammar view: every point by level, as collapsible blocks, each
+    with a checkbox you tick once you've mastered it (`done` holds the ids
+    of the ticked points)."""
+    done = done or set()
     index, points = load_grammar()
     # Notes with their own url and level (not in the wiki index) join the
     # level they name.
@@ -914,16 +998,28 @@ def grammar_html(grid: grid_data.Grid, config: dict) -> str:
     for key, note in points.items():
         if "url" in note:
             extra.setdefault(note.get("level", 3), []).append((key, note))
-    parts = []
+    bands = []
     for band in index:
         items = [(p["id"], p["title"], points.get(p["id"])) for p in band["points"]]
         items += [(key, note.get("title", key), note) for key, note in extra.get(band["level"], [])]
-        with_notes = sum(1 for _, _, note in items if note)
-        parts.append(f"<h2>{escape(band['label'])} <span class='gcount'>({escape(band['cefr'])})</span></h2>")
-        parts.append(f"<div class='gcount'>{len(items)} points · {with_notes} with notes</div>")
+        bands.append((band, items))
+    every = [key for _, items in bands for key, _, _ in items]
+    parts = ["<h2>All levels</h2>", grammar_progress(sum(1 for k in every if k in done), len(every), "all")]
+    for band, items in bands:
+        label = band["label"]
+        parts.append(f"<h2>{escape(label)} <span class='gcount'>({escape(band['cefr'])})</span></h2>")
+        parts.append(grammar_progress(sum(1 for k, _, _ in items if k in done), len(items), label))
         for key, title, note in items:
             url = (note or {}).get("url") or WIKI_URL + key
-            parts.append("<details class='gp'><summary>")
+            ticked = key in done
+            parts.append(
+                f"<details class='gp{' done' if ticked else ''}' data-id='{escape(key, quote=True)}' "
+                f"data-band='{escape(label, quote=True)}'><summary>"
+            )
+            parts.append(
+                f"<span class='gcheck' role='checkbox' aria-checked='{'true' if ticked else 'false'}' "
+                "title='Tick when you have mastered this point'></span>"
+            )
             parts.append(key_tile_html((note or {}).get("key", ""), grid, config))
             parts.append(f"<span>{escape(title)}</span>")
             if note:
@@ -1007,7 +1103,7 @@ class HanziGridDialog(QDialog):
         restoreGeom(self, "hanziGrid", default_size=(900, 700))
         # js=[] means: don't load jQuery, we don't need it.
         self.web.stdHtml(
-            build_html(grid, config),
+            build_html(grid, config, load_grammar_done() if config.get("view") == GRAMMAR else None),
             css=[],
             js=[],
             head=f"<style>{CSS}{themes.theme(config)['css']}</style>",
@@ -1048,6 +1144,10 @@ class HanziGridDialog(QDialog):
         elif cmd.startswith("search:"):
             browser = aqt.dialogs.open("Browser", mw)
             browser.search_for(self.search_for_text(cmd[len("search:"):]))
+        elif cmd.startswith("gdone:"):
+            # "gdone:1:<point id>" ticks a grammar point, "gdone:0:…" unticks.
+            flag, _, point_id = cmd[len("gdone:"):].partition(":")
+            save_grammar_done(point_id, flag == "1")
         elif cmd.startswith("link:"):
             openLink(cmd[len("link:"):])
 
