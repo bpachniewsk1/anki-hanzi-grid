@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.1 (2026-11-19)
+
+- Find works much more visibly in every view: matches get a yellow ring
+  (the current one blue and slightly larger), levels and grammar bands
+  without a match are hidden, the Next up rows step aside, the page
+  scrolls to the first match, and a counter shows "3 / 52". Enter and
+  Shift+Enter step through the matches, Esc clears the search.
+
 ## 1.7.0 (2026-11-18)
 
 - **Grammar checklist**: a checkbox on every grammar point to tick once

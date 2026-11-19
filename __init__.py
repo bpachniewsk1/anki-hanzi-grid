@@ -243,6 +243,16 @@ body[data-gshow="todo"] .gp.done, body[data-gshow="done"] .gp:not(.done) { displ
 .nxnote { color: #e0393e; }
 .tile sup { font-size: .55em; margin-left: .15em; color: var(--fg-subtle, gray); }
 
+/* Find: matches get a yellow ring, the current one a blue ring. While
+   searching, the Next up rows are hidden (their tiles repeat the grid's). */
+.hits { margin-left: .6em; font-size: .9em; color: var(--fg-subtle, gray); }
+.lsec.hide { display: none; }
+body.finding .next { display: none; }
+.tile.hit { box-shadow: 0 0 0 3px #f5b301; z-index: 1; }
+.tile.cur { box-shadow: 0 0 0 3px #2563eb, 0 0 12px 2px rgba(37, 99, 235, .45); transform: scale(1.15); z-index: 2; }
+.gp.hit, .mw.hit { box-shadow: 0 0 0 2px #f5b301; }
+.gp.cur, .mw.cur { box-shadow: 0 0 0 3px #2563eb; }
+
 /* Status colours, shared by tiles and progress bars. */
 .s0 { border: 1px solid var(--border-subtle, #ccc); color: var(--fg-subtle, gray); }
 .s1 { background: #f2c14e; color: #222; }
@@ -310,26 +320,42 @@ document.addEventListener("click", (event) => {
   pycmd(event.shiftKey ? tile.dataset.shift : tile.dataset.click);
 });
 
-// The Find box: show only the tiles whose text contains what you typed.
-// In the Characters view, typing a word (学生) also shows its characters.
-// In the Grammar view it searches the titles, patterns and key words.
+// The Find box. Matching tiles (or grammar points) get a yellow ring,
+// everything else is hidden, levels with no match are hidden too, and the
+// page scrolls to the first match. Enter jumps to the next match, Esc
+// clears. In the Characters view, typing a word (学生) also finds its
+// characters; in the Grammar view the titles, patterns and key words are
+// searched; in the Measure words view a measure word's heading (本, ben,
+// "books") matches its whole block.
 const find = document.getElementById("find");
-if (find) find.addEventListener("input", () => {
+const hits = document.getElementById("hits");
+let matches = [];
+let current = -1;
+
+function showCurrent() {
+  for (const m of document.querySelectorAll(".cur")) m.classList.remove("cur");
+  if (current < 0 || !matches.length) return;
+  const el = matches[current];
+  el.classList.add("cur");
+  el.scrollIntoView({ block: "center", behavior: "smooth" });
+  hits.textContent = `${current + 1} / ${matches.length}`;
+}
+
+function runFind() {
   const query = find.value.trim();
+  const q = query.toLowerCase();
   const view = document.body.dataset.view;
+  document.body.classList.toggle("finding", !!query);
+  for (const el of document.querySelectorAll(".hit, .cur")) el.classList.remove("hit", "cur");
+  matches = [];
   if (view === "grammar") {
-    const q = query.toLowerCase();
     for (const point of document.querySelectorAll(".gp")) {
       const text = point.querySelector("summary").textContent.toLowerCase();
-      point.classList.toggle("hide", !!q && !text.includes(q));
+      const match = !q || text.includes(q);
+      point.classList.toggle("hide", !match);
+      if (q && match) { point.classList.add("hit"); matches.push(point); }
     }
-    return;
-  }
-  if (view === "measure") {
-    // A measure word block matches by its heading (本, běn, "books"), and
-    // then shows all its words; otherwise only the words that match are
-    // shown, and empty rows and blocks are hidden.
-    const q = query.toLowerCase();
+  } else if (view === "measure") {
     for (const block of document.querySelectorAll(".mw")) {
       const head = block.querySelector("summary").textContent.toLowerCase();
       const whole = !q || head.includes(q);
@@ -339,22 +365,48 @@ if (find) find.addEventListener("input", () => {
         for (const tile of row.querySelectorAll(".tile")) {
           const match = whole || tile.textContent.includes(query);
           tile.classList.toggle("hide", !match);
+          if (q && match && !whole) { tile.classList.add("hit"); matches.push(tile); }
           rowAny = rowAny || match;
         }
         row.classList.toggle("hide", !rowAny);
         any = any || rowAny;
       }
       block.classList.toggle("hide", !any);
+      if (q && whole) { block.classList.add("hit"); matches.push(block); }
       if (q && any) block.open = true;
     }
-    return;
+  } else {
+    for (const tile of document.querySelectorAll(".grid .tile")) {
+      const text = tile.textContent;
+      const match = !query || text.includes(query) || (view === "chars" && query.includes(text));
+      tile.classList.toggle("hide", !match);
+      if (query && match) { tile.classList.add("hit"); matches.push(tile); }
+    }
   }
-  for (const tile of document.querySelectorAll(".grid .tile")) {
-    const text = tile.textContent;
-    const match = !query || text.includes(query) || (view === "chars" && query.includes(text));
-    tile.classList.toggle("hide", !match);
+  // Hide whole levels without a match.
+  for (const sec of document.querySelectorAll(".lsec")) {
+    sec.classList.toggle("hide", !!query && !sec.querySelector(".hit"));
   }
-});
+  if (!query) { hits.textContent = ""; current = -1; return; }
+  if (!matches.length) { hits.textContent = "No matches"; current = -1; return; }
+  current = 0;
+  showCurrent();
+}
+
+if (find) {
+  find.addEventListener("input", runFind);
+  find.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && matches.length) {
+      event.preventDefault();
+      current = (current + (event.shiftKey ? matches.length - 1 : 1)) % matches.length;
+      showCurrent();
+    } else if (event.key === "Escape") {
+      event.stopPropagation();
+      find.value = "";
+      runFind();
+    }
+  });
+}
 
 // Grammar checkboxes. preventDefault stops the click from also opening
 // the point. Python stores the ticked points (see on_bridge_cmd).
@@ -657,7 +709,7 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
         for value, text in (("all", "All"), ("todo", "To do"), ("done", "Mastered")):
             on = " on" if value == "all" else ""
             parts.append(f"<span class='pill{on}' data-gshow='{value}'>{text}</span>")
-        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='过, 把, de, if …'>")
+        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='过, 把, de, if …'><span id='hits' class='hits'></span>")
     elif view == READING:
         parts.append("<span class='pill' data-read='analyse'>Analyse</span><span class='pill' data-read='sample'>Sample text</span><span class='pill' data-read='clear'>Clear</span>")
     elif view == MEASURE:
@@ -666,13 +718,13 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
         for value, text in SHOW_CHOICES:
             on = " on" if value == "all" else ""
             parts.append(f"<span class='pill{on}' data-show='{value}'>{text}</span>")
-        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='书 or 本'>")
+        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='书 or 本'><span id='hits' class='hits'></span>")
     else:
         parts.append("<span class='label'>Show:</span>")
         for value, text in SHOW_CHOICES:
             on = " on" if value == "all" else ""
             parts.append(f"<span class='pill{on}' data-show='{value}'>{text}</span>")
-        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='学 or 学生'>")
+        parts.append("<span class='label'>Find:</span><input id='find' type='search' placeholder='学 or 学生'><span id='hits' class='hits'></span>")
     parts.append("</div>")
 
     deck_text = ", ".join(escape(d) for d in decks) if decks else "all decks"
@@ -717,7 +769,8 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
     parts.append(progress([item for _, items in groups for item in items], now_ms))
 
     for label, items in groups:
-        parts.append(f"<h2>{escape(label)}</h2>")
+        # One section per level, so Find can hide the levels with no match.
+        parts.append(f"<section class='lsec'><h2>{escape(label)}</h2>")
         parts.append(progress(items, now_ms))
         # The next tiles to learn: the first ones you haven't studied, in
         # deck order (frequency order in the xiehanzi deck).
@@ -725,7 +778,7 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
         parts.append(next_up_html([render(i) for i in unseen[:NEXT_UP]]))
         parts.append("<div class='grid'>")
         parts.extend(render(item) for item in items)
-        parts.append("</div>")
+        parts.append("</div></section>")
 
     parts.append(
         "<div id='panel'><div class='box'><button class='close' data-cmd='close' title='Close (Esc)'>×</button>"
@@ -1007,7 +1060,7 @@ def grammar_html(grid: grid_data.Grid, config: dict, done: set | None = None) ->
     parts = ["<h2>All levels</h2>", grammar_progress(sum(1 for k in every if k in done), len(every), "all")]
     for band, items in bands:
         label = band["label"]
-        parts.append(f"<h2>{escape(label)} <span class='gcount'>({escape(band['cefr'])})</span></h2>")
+        parts.append(f"<section class='lsec'><h2>{escape(label)} <span class='gcount'>({escape(band['cefr'])})</span></h2>")
         parts.append(grammar_progress(sum(1 for k, _, _ in items if k in done), len(items), label))
         for key, title, note in items:
             url = (note or {}).get("url") or WIKI_URL + key
@@ -1039,6 +1092,7 @@ def grammar_html(grid: grid_data.Grid, config: dict, done: set | None = None) ->
             if note and note.get("key"):
                 parts.append(f"<a data-cmd='search:{escape(note['key'], quote=True)}'>Find {escape(note['key'])} in the Browser</a>")
             parts.append("</div></div></details>")
+        parts.append("</section>")
     return "".join(parts)
 
 

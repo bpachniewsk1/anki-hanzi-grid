@@ -62,7 +62,9 @@ it, with a progress bar for each level.
 - **Weak marks:** a red dot on tiles you keep forgetting (3 lapses or more;
   adjustable).
 - **Show** filter (not studied, in progress, mature+, weak) and a **Find**
-  box.
+  box: matches get a yellow ring, levels without a match are hidden, the
+  page jumps to the first match, Enter / Shift+Enter step through them
+  ("3 / 52"), Esc clears.
 - **Settings window** to choose decks, level source, fields and the mature,
   mastered and weak thresholds.
 - **Read-only:** the add-on never changes your cards or notes.
