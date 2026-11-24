@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.10.0 (2026-11-24)
+
+- **Seal** is now the classic look (its font, weight, shapes and first
+  three colours) with ink blue for well known and the red seal stamp for
+  mastered.
+- New look **Ink**: shades of ink on paper, characters in brush-style
+  Kaiti (楷体, the style of handwriting and signs), a small red seal on
+  mastered tiles.
+- New look **Clear**: a colour-blind-safe ladder (yellow, green, teal,
+  blue, purple) that also reads in greyscale.
+- Gems is gone; if it was chosen, the grid falls back to Modern.
+
 ## 1.9.0 (2026-11-24)
 
 - Two new looks: **Gems** (peach, sky, blue, violet for well known, gold

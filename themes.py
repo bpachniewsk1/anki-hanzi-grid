@@ -5,17 +5,20 @@
 """The looks of the grid (config key "theme", the Look menu in the grid,
 or Settings > Look).
 
-"classic" is the original look: the base CSS in __init__.py as it is.
-"modern" is the same page with a softer, flatter style layered on top:
-rounder tiles, borderless buttons and cards, a fresher green scale.
-"gems" and "seal" use the modern shapes with other colour ladders:
-  gems  peach, sky, blue, violet, then gold for mastered
-  seal  rice paper, pale jade, jade, ink blue, then a cinnabar seal
-        stamp (印章) for mastered
-The colours of each status live here too, so the deck-list summary matches.
+  classic  the original look: the base CSS in __init__.py as it is.
+  modern   softer and flatter (rounder tiles, borderless buttons), a
+           fresh green scale. The default.
+  seal     classic, with ink blue for well known and a red seal stamp
+           (印章) for mastered.
+  ink      ink on paper: greys from a light wash to black ink, mastered
+           with a small red seal; characters in Kaiti (楷体), the brush
+           style you see in handwriting and signs.
+  clear    a colour-blind-safe ladder (viridis: yellow, green, teal,
+           blue, purple) that also prints well in greyscale.
 
-"modern" is the default. Every look is put in the page, so the Look menu
-switches instantly; the choice is saved in the add-on's config.
+The colours of each status live here too, so the deck-list summary
+matches. Every look is put in the page, so the Look menu switches
+instantly; the choice is saved in the add-on's config.
 """
 
 from __future__ import annotations
@@ -25,11 +28,12 @@ from __future__ import annotations
 CLASSIC_COLOURS = {1: "#f2c14e", 2: "#9fd59a", 3: "#2f8f57", 4: "#1b6b80", 5: "#17472c"}
 MODERN_COLOURS = {1: "#fde68a", 2: "#a7f3d0", 3: "#10b981", 4: "#0e7490", 5: "#065f46"}
 
-GEMS_COLOURS = {1: "#fdba74", 2: "#bfdbfe", 3: "#3b82f6", 4: "#7c3aed", 5: "#f59e0b"}
-SEAL_COLOURS = {1: "#ecdcb9", 2: "#c6e3cf", 3: "#3f8f6b", 4: "#2b3a55", 5: "#b8322a"}
+SEAL_COLOURS = {1: "#f2c14e", 2: "#9fd59a", 3: "#2f8f57", 4: "#2b3a55", 5: "#b8322a"}
+INK_COLOURS = {1: "#e8dcc0", 2: "#cbc2b0", 3: "#7a7266", 4: "#3a3631", 5: "#141210"}
+CLEAR_COLOURS = {1: "#fde725", 2: "#5ec962", 3: "#21918c", 4: "#3b528b", 5: "#440154"}
 
 # Rules that override the base CSS (same selectors, placed after it).
-# The shapes, shared by every look except classic.
+# The modern shapes.
 MODERN_SHAPES = """
 body { font-size: 14px; }
 h2 { font-weight: 600; }
@@ -68,41 +72,59 @@ MODERN_STATUS = """
 .s5 { background: #065f46; color: #fcd34d; }
 """
 
-GEMS_STATUS = """
-.s0 { border: none; background: var(--border-subtle, #e2e5e9); color: var(--fg-subtle, #6b7280); }
-.s1, .tile.s1 { background: #fed7aa; color: #7c2d12; }
-.s2, .tile.s2 { background: #bfdbfe; color: #1e3a8a; }
-.s3, .tile.s3 { background: #3b82f6; color: #fff; }
-.s4, .tile.s4 { background: #7c3aed; color: #fff; }
-.s5 { background: #f59e0b; color: #451a03; }
-.tile.s5 { background: linear-gradient(135deg, #fde68a, #f59e0b 70%); color: #451a03; font-weight: 700; }
-.counts .week { color: #6d28d9; background: #ede9fe; }
-.hz b { color: #7c3aed; }
-"""
-
-SEAL_STATUS = """
-.s0 { border: none; background: var(--border-subtle, #e7e2d8); color: var(--fg-subtle, #7c7466); }
-.s1, .tile.s1 { background: #f2e6c9; color: #6b4f1d; }
-.s2, .tile.s2 { background: #c6e3cf; color: #1d4d33; }
-.s3, .tile.s3 { background: #3f8f6b; color: #fff; }
+# Seal: the classic look (its shapes, font and first three colours) with
+# ink blue for well known and a red seal stamp for mastered.
+SEAL_CSS = """
 .s4, .tile.s4 { background: #2b3a55; color: #f2e6c9; }
 .s5 { background: #b8322a; color: #ffe9a8; }
 /* Mastered: a red seal stamp, with a thin pale frame inside. */
-.tile.s5 { background: #b8322a; color: #ffe9a8; outline: 1.5px solid rgba(255, 233, 168, .6); outline-offset: -4px; font-weight: 700; }
-.counts .week { color: #8f2a22; background: #f6e1d6; }
+.tile.s5 { outline: 1px solid rgba(255, 233, 168, .65); outline-offset: -4px; }
+.tile.s5:hover { outline: 2px solid var(--fg, black); outline-offset: 0; }
 .hz b { color: #b8322a; }
+"""
+
+# Ink: shades of ink on paper, Kaiti characters, a red seal on mastered.
+INK_CSS = """
+.tile, .hz, .rtext { font-family: "Kaiti SC", "STKaiti", "KaiTi", "AR PL UKai CN", "Noto Serif SC", serif; }
+.tile { font-size: 24px; }
+.tile.w { font-size: 20px; }
+.s0 { border: 1px solid #d8d0c0; color: #a39a88; }
+.s1, .tile.s1 { background: #e8dcc0; color: #5b4a2c; }
+.s2, .tile.s2 { background: #cbc2b0; color: #2b2620; }
+.s3, .tile.s3 { background: #7a7266; color: #fbf7ee; }
+.s4, .tile.s4 { background: #3a3631; color: #fbf7ee; }
+.s5 { background: #141210; color: #fff; }
+/* Mastered: black ink with a small red seal in the corner. */
+.tile.s5::before {
+  content: ""; position: absolute; bottom: 3px; right: 3px; width: 6px; height: 6px;
+  background: #c0392b; border-radius: 1px;
+}
+.counts .week { color: #8f2a22; }
+.hz b { color: #c0392b; }
+"""
+
+# Clear: viridis, readable with any kind of colour blindness.
+CLEAR_CSS = """
+.s1, .tile.s1 { background: #fde725; color: #3d3500; }
+.s2, .tile.s2 { background: #5ec962; color: #0b2e13; }
+.s3, .tile.s3 { background: #21918c; color: #fff; }
+.s4, .tile.s4 { background: #3b528b; color: #fff; }
+.s5 { background: #440154; color: #fde725; }
+.counts .week { color: #3b528b; }
 """
 
 THEMES = {
     "modern": {"css": MODERN_SHAPES + MODERN_STATUS, "colours": MODERN_COLOURS},
-    "gems": {"css": MODERN_SHAPES + GEMS_STATUS, "colours": GEMS_COLOURS},
-    "seal": {"css": MODERN_SHAPES + SEAL_STATUS, "colours": SEAL_COLOURS},
+    "seal": {"css": SEAL_CSS, "colours": SEAL_COLOURS},
+    "ink": {"css": INK_CSS, "colours": INK_COLOURS},
+    "clear": {"css": CLEAR_CSS, "colours": CLEAR_COLOURS},
     "classic": {"css": "", "colours": CLASSIC_COLOURS},
 }
 THEME_CHOICES = [
     ("modern", "Modern"),
-    ("gems", "Gems"),
     ("seal", "Seal"),
+    ("ink", "Ink"),
+    ("clear", "Clear (colour-blind safe)"),
     ("classic", "Classic"),
 ]
 DEFAULT_THEME = "modern"
