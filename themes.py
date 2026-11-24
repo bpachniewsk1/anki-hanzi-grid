@@ -11,8 +11,7 @@ or Settings > Look).
   seal     classic, with ink blue for well known and a red seal stamp
            (印章) for mastered.
   ink      ink on paper: greys from a light wash to black ink, mastered
-           with a small red seal; characters in Kaiti (楷体), the brush
-           style you see in handwriting and signs.
+           with a small red seal. Pairs well with the Kai font.
   clear    a colour-blind-safe ladder (viridis: yellow, green, teal,
            blue, purple) that also prints well in greyscale.
 
@@ -83,11 +82,9 @@ SEAL_CSS = """
 .hz b { color: #b8322a; }
 """
 
-# Ink: shades of ink on paper, Kaiti characters, a red seal on mastered.
+# Ink: shades of ink on paper, a red seal on mastered. Pairs well with the
+# Kai font (楷 in the Font switch).
 INK_CSS = """
-.tile, .hz, .rtext { font-family: "Kaiti SC", "STKaiti", "KaiTi", "AR PL UKai CN", "Noto Serif SC", serif; }
-.tile { font-size: 24px; }
-.tile.w { font-size: 20px; }
 .s0 { border: 1px solid #d8d0c0; color: #a39a88; }
 .s1, .tile.s1 { background: #e8dcc0; color: #5b4a2c; }
 .s2, .tile.s2 { background: #cbc2b0; color: #2b2620; }
@@ -124,10 +121,25 @@ THEME_CHOICES = [
     ("modern", "Modern"),
     ("seal", "Seal"),
     ("ink", "Ink"),
-    ("clear", "Clear (colour-blind safe)"),
+    ("clear", "Clear"),
     ("classic", "Classic"),
 ]
 DEFAULT_THEME = "modern"
+
+# The hanzi font and size (config "font", "font_size"; the Font and Size
+# switches next to Settings). The three styles a reader meets everywhere.
+FONT_CHOICES = [
+    ("hei", "黑", "Hei 黑体 (sans): apps, websites, signs"),
+    ("song", "宋", "Song 宋体 (serif): books, newspapers, exam papers"),
+    ("kai", "楷", "Kai 楷体 (brush): textbooks, stroke order, handwriting"),
+]
+SIZE_CHOICES = [
+    ("s", "S", "Small"),
+    ("m", "M", "Medium"),
+    ("l", "L", "Large"),
+]
+DEFAULT_FONT = "hei"
+DEFAULT_SIZE = "m"
 
 
 def theme(config: dict) -> dict:

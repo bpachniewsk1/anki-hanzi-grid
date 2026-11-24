@@ -85,6 +85,17 @@ STATUS_NAMES = {
 }
 
 CSS = """
+/* Hanzi font and size, from the Font and Size switches (body data-font,
+   data-size; see font_html). Every hanzi rule below uses these two. */
+body {
+  --hz-font: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  --hz-k: 1; --hz-s: 1; --hz: calc(var(--hz-k) * var(--hz-s));
+}
+body[data-font="song"] { --hz-font: "Songti SC", "STSong", "Noto Serif CJK SC", "Noto Serif SC", "SimSun", serif; }
+/* Kai is drawn a little smaller than Hei at the same size. */
+body[data-font="kai"] { --hz-font: "Kaiti SC", "STKaiti", "KaiTi", "AR PL UKai CN", serif; --hz-k: 1.08; }
+body[data-size="s"] { --hz-s: .8; }
+body[data-size="l"] { --hz-s: 1.3; }
 body { margin: 1em 1.5em; }
 .legend span { margin-right: 1.2em; white-space: nowrap; }
 .legend .tile { display: inline-flex; width: 1.2em; height: 1.2em; min-width: 0; font-size: 14px; vertical-align: middle; margin-right: .3em; cursor: default; }
@@ -100,6 +111,11 @@ h3 { margin: 1.2em 0 .3em; font-size: 1em; }
 }
 .switch .label, .tools .label { border: none; padding-left: 0; cursor: default; margin-left: .6em; }
 .switch .settings { float: right; background: none; color: inherit; font: inherit; }
+.switch .hzopts { float: right; margin-right: .6em; font-size: .9em; color: var(--fg-subtle, gray); white-space: nowrap; }
+.switch .hzopts span.opt { margin: 0 0 0 .25em; padding: .15em .55em; }
+.switch .hzopts .f-hei { font-family: "PingFang SC", "Noto Sans CJK SC", sans-serif; }
+.switch .hzopts .f-song { font-family: "Songti SC", "STSong", "Noto Serif CJK SC", serif; }
+.switch .hzopts .f-kai { font-family: "Kaiti SC", "STKaiti", "KaiTi", serif; }
 .switch .look { float: right; margin-right: .6em; font-size: .9em; color: var(--fg-subtle, gray); }
 .switch .look select { font: inherit; color: var(--fg, black); background: var(--canvas-elevated, white); border: 1px solid var(--border-subtle, #ccc); border-radius: 1em; padding: .15em .5em; }
 .switch span.on, .tools span.on { background: var(--fg, black); color: var(--canvas, white); cursor: default; }
@@ -121,11 +137,11 @@ h3 { margin: 1.2em 0 .3em; font-size: 1em; }
 .next { margin-bottom: .6em; align-items: center; }
 .next .label { color: var(--fg-subtle, gray); font-size: .9em; margin-right: .4em; }
 .tile {
-  position: relative; height: 1.7em; min-width: 1.7em; font-size: 22px; border-radius: 4px;
+  position: relative; height: 1.7em; min-width: 1.7em; font-size: calc(22px * var(--hz)); border-radius: 4px;
   display: flex; align-items: center; justify-content: center; cursor: pointer;
-  font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  font-family: var(--hz-font);
 }
-.tile.w { font-size: 18px; padding: 0 .4em; height: 1.9em; }
+.tile.w { font-size: calc(18px * var(--hz)); padding: 0 .4em; height: 1.9em; }
 .tile:hover { outline: 2px solid var(--fg, black); }
 .tile.hide { display: none; }
 
@@ -149,7 +165,7 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
   background: var(--canvas-elevated, white); color: var(--fg, black);
   border: 1px solid var(--border, #bbb); box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
 }
-.hz { font-size: 26px; font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; }
+.hz { font-size: calc(26px * var(--hz)); font-family: var(--hz-font); }
 .hz b { color: #c0392b; }
 .py { font-size: 17px; margin-left: .4em; }
 .mn { margin-top: .2em; }
@@ -181,15 +197,15 @@ body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 .gp.hide { display: none; }
 .gp summary { padding: .4em .7em; cursor: pointer; display: flex; align-items: center; gap: .6em; }
 .gp summary::-webkit-details-marker { display: none; }
-.gp summary .tile { font-size: 16px; height: 1.6em; min-width: 1.6em; flex: none; }
-.gp summary .tile.w { font-size: 14px; }
+.gp summary .tile { font-size: calc(16px * var(--hz)); height: 1.6em; min-width: 1.6em; flex: none; }
+.gp summary .tile.w { font-size: calc(14px * var(--hz)); }
 .gp summary .none { width: 1.6em; height: 1.6em; flex: none; }
 .gp summary .pat { color: var(--fg-subtle, gray); font-size: .9em; margin-left: auto; white-space: nowrap; }
 .gp .body { padding: .2em .9em .8em 1.1em; border-top: 1px solid var(--border-subtle, #eee); }
 .gp .body p { margin: .5em 0; max-width: 46em; }
 .gp table { border-collapse: collapse; margin: .4em 0; }
 .gp td { padding: .15em .9em .15em 0; vertical-align: top; }
-.gp td.zh { font-size: 19px; font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; white-space: nowrap; }
+.gp td.zh { font-size: calc(19px * var(--hz)); font-family: var(--hz-font); white-space: nowrap; }
 .gp td.py { color: var(--fg-subtle, gray); white-space: nowrap; }
 .gp .links { margin-top: .4em; font-size: .9em; }
 .gp .links a { margin-right: 1em; cursor: pointer; color: var(--fg-link, #0a66c2); text-decoration: underline; }
@@ -219,8 +235,8 @@ body[data-gshow="todo"] .gp.done, body[data-gshow="done"] .gp:not(.done) { displ
 }
 .mw[open] summary { border-bottom: 1px solid var(--border-subtle, #ddd); }
 .mw summary::-webkit-details-marker { display: none; }
-.mw summary .tile { font-size: 20px; height: 1.6em; min-width: 1.6em; flex: none; }
-.mw summary .hz { font-size: 24px; font-weight: bold; }
+.mw summary .tile { font-size: calc(20px * var(--hz)); height: 1.6em; min-width: 1.6em; flex: none; }
+.mw summary .hz { font-size: calc(24px * var(--hz)); font-weight: bold; }
 .mw summary .gloss { color: var(--fg-subtle, gray); font-size: .9em; }
 .mw summary .pat { color: var(--fg-subtle, gray); font-size: .9em; margin-left: auto; white-space: nowrap; }
 .mw .body { padding: .3em .9em .6em; }
@@ -232,11 +248,11 @@ body[data-gshow="todo"] .gp.done, body[data-gshow="done"] .gp:not(.done) { displ
 .reading textarea {
   width: 100%; max-width: 60em; box-sizing: border-box; font: inherit; font-size: 16px; padding: .6em .8em;
   border: 1px solid var(--border-subtle, #ccc); border-radius: 6px; background: var(--canvas-elevated, white); color: var(--fg, black);
-  font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  font-family: var(--hz-font);
 }
 .rtext {
-  max-width: 60em; font-size: 24px; line-height: 1.9; margin: .6em 0 1em;
-  font-family: "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
+  max-width: 60em; font-size: calc(24px * var(--hz)); line-height: 1.9; margin: .6em 0 1em;
+  font-family: var(--hz-font);
 }
 .rtext .rw { cursor: pointer; border-radius: 4px; padding: 0 1px; }
 .rtext .rw:hover { outline: 2px solid var(--fg, black); }
@@ -304,6 +320,17 @@ function showPanel(html) {
   panel.querySelector(".box").scrollTop = 0;
 }
 function closePanel() { panel.style.display = "none"; hideTip(); }
+
+// Font and Size switches: change the page now, let Python save it.
+document.addEventListener("click", (event) => {
+  const opt = event.target.closest("[data-hzfont], [data-hzsize]");
+  if (!opt) return;
+  const isFont = "hzfont" in opt.dataset;
+  const value = isFont ? opt.dataset.hzfont : opt.dataset.hzsize;
+  document.body.dataset[isFont ? "font" : "size"] = value;
+  for (const o of document.querySelectorAll(isFont ? "[data-hzfont]" : "[data-hzsize]")) o.classList.toggle("on", o === opt);
+  pycmd((isFont ? "font:" : "font_size:") + value);
+});
 
 // The Look menu: swap the look's CSS now, and let Python save the choice.
 const look = document.getElementById("look");
@@ -697,6 +724,13 @@ def pills(choices, current: str, command: str) -> str:
     return "".join(parts)
 
 
+def body_font_js(config: dict) -> str:
+    """Script that puts the saved font and size on the page body."""
+    font = config.get("font", themes.DEFAULT_FONT)
+    size = config.get("font_size", themes.DEFAULT_SIZE)
+    return f"document.body.dataset.font = {json.dumps(font)}; document.body.dataset.size = {json.dumps(size)};"
+
+
 def look_html(config: dict) -> str:
     """The Look menu, top right. Every look's CSS is in the page, so
     changing it swaps the <style id='hgtheme'> at once (see JS) and tells
@@ -708,9 +742,27 @@ def look_html(config: dict) -> str:
     )
     css = {value: themes.THEMES[value]["css"] for value, _ in themes.THEME_CHOICES}
     return (
-        f"<label class='look'>Look <select id='look'>{options}</select></label>"
+        f"<label class='look' title='Clear is safe for colour blindness'>Look <select id='look'>{options}</select></label>"
         f"<script>window.hgThemes = {json.dumps(css)};</script>"
     )
+
+
+def font_html(config: dict) -> str:
+    """The Font (黑 宋 楷) and Size (S M L) switches, top right next to
+    Settings. Clicking one sets data-font / data-size on the page body,
+    which the CSS turns into the hanzi font and size (see JS), and tells
+    Python to save it, without rebuilding the grid."""
+    font = config.get("font", themes.DEFAULT_FONT)
+    size = config.get("font_size", themes.DEFAULT_SIZE)
+    fonts = "".join(
+        f"<span class='opt f-{value}{' on' if value == font else ''}' data-hzfont='{value}' title='{escape(hint)}'>{label}</span>"
+        for value, label, hint in themes.FONT_CHOICES
+    )
+    sizes = "".join(
+        f"<span class='opt{' on' if value == size else ''}' data-hzsize='{value}' title='{escape(hint)}'>{label}</span>"
+        for value, label, hint in themes.SIZE_CHOICES
+    )
+    return f"<div class='hzopts'>Font{fonts} &nbsp;Size{sizes}</div>"
 
 
 def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = None) -> str:
@@ -728,6 +780,7 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
 
     parts.append("<div class='switch'>")
     parts.append("<button class='settings' data-cmd='settings'>⚙ Settings</button>")
+    parts.append(font_html(config))
     parts.append(look_html(config))
     parts.append("<span class='label'>View:</span>" + pills(VIEW_CHOICES, view, "view"))
     if view == CHARS:
@@ -776,7 +829,7 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
         else:
             parts.append(reading_html(grid, config))
         parts.append("<div id='tip'></div>")
-        parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
+        parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{body_font_js(config)}{JS}</script>")
         if view == READING:
             parts.append(f"<script>{READING_JS}</script>")
         return "".join(parts)
@@ -821,7 +874,7 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
     )
     parts.append("<div id='tip'></div>")
     # The Find box behaves differently per view (see JS).
-    parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{JS}</script>")
+    parts.append(f"<script>document.body.dataset.view = {json.dumps(view)};{body_font_js(config)}{JS}</script>")
     return "".join(parts)
 
 
@@ -1207,6 +1260,11 @@ class HanziGridDialog(QDialog):
         elif cmd.startswith("levels:"):
             self.config["levels"] = cmd[len("levels:"):]
             save_config(self.config)
+        elif cmd.startswith("font:") or cmd.startswith("font_size:"):
+            # Like theme: the page has switched already; just remember it.
+            key, _, value = cmd.partition(":")
+            self.config[key] = value
+            mw.addonManager.writeConfig(__name__, self.config)
         elif cmd.startswith("theme:"):
             # The page has already switched its look; just remember it.
             # No rebuild: the deck-list summary picks it up on its next redraw.

@@ -12,5 +12,7 @@
   "mastered_days": 90,
   "weak_lapses": 3,
   "deck_widget": true,
-  "theme": "modern"
+  "theme": "modern",
+  "font": "hei",
+  "font_size": "m"
 }

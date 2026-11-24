@@ -154,6 +154,18 @@ class SettingsDialog(QDialog):
         self.theme.setCurrentIndex(max(0, self.theme.findData(config.get("theme", themes.DEFAULT_THEME))))
         form.addRow("Look:", self.theme)
 
+        # --- Hanzi font and size (also the switches next to Settings) ----
+        self.font = QComboBox()
+        for value, label, hint in themes.FONT_CHOICES:
+            self.font.addItem(f"{label}  {hint}", value)
+        self.font.setCurrentIndex(max(0, self.font.findData(config.get("font", themes.DEFAULT_FONT))))
+        form.addRow("Hanzi font:", self.font)
+        self.font_size = QComboBox()
+        for value, label, hint in themes.SIZE_CHOICES:
+            self.font_size.addItem(hint, value)
+        self.font_size.setCurrentIndex(max(0, self.font_size.findData(config.get("font_size", themes.DEFAULT_SIZE))))
+        form.addRow("Hanzi size:", self.font_size)
+
         # --- Deck list summary --------------------------------------------
         self.deck_widget = QCheckBox("Show a progress summary on the deck list")
         self.deck_widget.setChecked(bool(config.get("deck_widget", True)))
@@ -167,7 +179,7 @@ class SettingsDialog(QDialog):
         qconnect(buttons.rejected, self.reject)
         form.addRow(buttons)
 
-        self.resize(460, 720)
+        self.resize(460, 780)
 
     def accept(self) -> None:
         """Save was clicked: copy the widgets' values into the config."""
@@ -191,6 +203,8 @@ class SettingsDialog(QDialog):
         self.config["weak_lapses"] = self.weak_lapses.value()
         self.config["deck_widget"] = self.deck_widget.isChecked()
         self.config["theme"] = self.theme.currentData()
+        self.config["font"] = self.font.currentData()
+        self.config["font_size"] = self.font_size.currentData()
 
         super().accept()  # closes the dialog
         self.on_save(self.config)  # __init__.py saves it and rebuilds the grid

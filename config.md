@@ -13,6 +13,8 @@ The easiest way to change these is the **⚙ Settings** button in the grid (the 
 - **mastered_days**: a card's interval (in days) from which it counts as "mastered", the top level, if its last 3 reviews were also answered correctly. Can't be lower than **mature_days**. Default: `90` (about three months).
 - **weak_lapses**: how often you must have forgotten a card (Anki's lapses count) for it to get a red "weak" dot. Default: `3`.
 - **deck_widget**: `true` shows a small progress summary (one bar per level) under the deck list on Anki's main screen, with an Open link. Default: `true`.
-- **theme**: the look of the grid: `"modern"` (softer, rounder, greens), `"seal"` (classic with ink blue for well known and a red seal stamp for mastered), `"ink"` (ink shades, Kaiti characters), `"clear"` (colour-blind safe) or `"classic"` (the original). The Look menu in the grid and Settings → Look change it. Default: `"modern"`.
+- **theme**: the look of the grid: `"modern"` (softer, rounder, greens), `"seal"` (classic with ink blue for well known and a red seal stamp for mastered), `"ink"` (ink shades, a red seal on mastered), `"clear"` (colour-blind safe) or `"classic"` (the original). The Look menu in the grid and Settings → Look change it. Default: `"modern"`.
+- **font**: the font of every hanzi: `"hei"` (黑体, sans: apps and signs), `"song"` (宋体, serif: books and exam papers) or `"kai"` (楷体, brush: textbooks and handwriting). The Font switch next to Settings changes it. Default: `"hei"`.
+- **font_size**: the size of every hanzi: `"s"`, `"m"` or `"l"`. The Size switch next to Settings changes it. Default: `"m"`.
 
 Changes apply the next time the grid opens.

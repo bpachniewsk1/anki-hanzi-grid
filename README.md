@@ -50,9 +50,14 @@ it, with a progress bar for each level.
   right of the grid (or Settings → Look), and remembered:
   *Modern* (default: flat, rounded, a green scale), *Seal* (the classic
   look with ink blue for well known and a red seal stamp 印章 for
-  mastered), *Ink* (ink shades on paper, characters in brush-style Kaiti
-  楷体, a small red seal on mastered), *Clear* (a colour-blind-safe
-  yellow → purple ladder) and *Classic* (the original).
+  mastered), *Ink* (ink shades on paper, a small red seal on mastered),
+  *Clear* (a colour-blind-safe yellow → purple ladder) and *Classic*
+  (the original).
+- **Hanzi font and size**, next to Settings: **Font 黑 宋 楷** switches
+  every hanzi between the three styles you meet when reading, Hei 黑体
+  (sans: apps, websites, signs), Song 宋体 (serif: books, newspapers,
+  exam papers) and Kai 楷体 (brush: textbooks, stroke order,
+  handwriting); **Size S M L**. Both switch instantly and are remembered.
 - **Progress bars** for each level and for all levels together, with
   "studied", "mature", "well known" and "mastered" numbers, and **"+N this week"** for
   what you started in the last 7 days.
@@ -160,6 +165,8 @@ Click **⚙ Settings** in the grid, or select Hanzi Grid in
 | Weak from | How often you must have forgotten a card (lapses) for its tile to get a red dot. | 3 lapses |
 | Show a progress summary on the deck list | The small bars under Anki's deck list. | on |
 | Look | Modern, Seal, Ink, Clear or Classic. Also in the Look menu in the grid. | Modern |
+| Hanzi font | Hei 黑, Song 宋 or Kai 楷. Also the Font switch in the grid. | Hei |
+| Hanzi size | Small, Medium or Large. Also the Size switch in the grid. | Medium |
 
 The defaults fit the [Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi)
 "New HSK (2025)" deck. For other decks, pick your deck and its field names.

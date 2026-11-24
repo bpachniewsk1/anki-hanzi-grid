@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.11.0 (2026-11-24)
+
+- **Font and Size switches** next to Settings: every hanzi (tiles, hover
+  box, character panel, measure words, grammar examples, Reading) in Hei
+  黑体, Song 宋体 or Kai 楷体, and Small, Medium or Large. They switch
+  instantly and are remembered (config `font`, `font_size`; also in
+  Settings).
+- Ink no longer forces Kai; pick 楷 in the Font switch for the brush
+  look.
+- The Look menu is narrower ("Clear" instead of "Clear (colour-blind
+  safe)"), so the top row fits on one line.
+
 ## 1.10.0 (2026-11-24)
 
 - **Seal** is now the classic look (its font, weight, shapes and first
