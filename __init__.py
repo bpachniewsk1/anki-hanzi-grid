@@ -18,7 +18,7 @@ How the add-on is split up
 - previewer.py  the card preview window (built on Anki's own previewer).
 - deck_widget.py the small progress summary on Anki's deck list.
 - settings.py   the Settings window (decks, level source, fields …).
-- themes.py     the looks: Modern, Gems, Seal and Classic (colours and shapes).
+- themes.py     the looks: Modern, Seal, Ink, Clear and Classic.
 - data/hsk3.1/  the official HSK 3.1 character lists (see SOURCE.md there).
 - data/grammar/ the grammar points and notes for the Grammar view.
 - data/classifiers/ which measure word each word takes (Measure words view).
