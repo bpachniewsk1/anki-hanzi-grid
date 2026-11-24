@@ -18,7 +18,7 @@ How the add-on is split up
 - previewer.py  the card preview window (built on Anki's own previewer).
 - deck_widget.py the small progress summary on Anki's deck list.
 - settings.py   the Settings window (decks, level source, fields …).
-- themes.py     the Classic and Modern looks (colours and shapes).
+- themes.py     the looks: Modern, Gems, Seal and Classic (colours and shapes).
 - data/hsk3.1/  the official HSK 3.1 character lists (see SOURCE.md there).
 - data/grammar/ the grammar points and notes for the Grammar view.
 - data/classifiers/ which measure word each word takes (Measure words view).
@@ -100,6 +100,8 @@ h3 { margin: 1.2em 0 .3em; font-size: 1em; }
 }
 .switch .label, .tools .label { border: none; padding-left: 0; cursor: default; margin-left: .6em; }
 .switch .settings { float: right; background: none; color: inherit; font: inherit; }
+.switch .look { float: right; margin-right: .6em; font-size: .9em; color: var(--fg-subtle, gray); }
+.switch .look select { font: inherit; color: var(--fg, black); background: var(--canvas-elevated, white); border: 1px solid var(--border-subtle, #ccc); border-radius: 1em; padding: .15em .5em; }
 .switch span.on, .tools span.on { background: var(--fg, black); color: var(--canvas, white); cursor: default; }
 .tools input {
   font: inherit; padding: .2em .6em; margin-left: .6em; width: 11em;
@@ -302,6 +304,14 @@ function showPanel(html) {
   panel.querySelector(".box").scrollTop = 0;
 }
 function closePanel() { panel.style.display = "none"; hideTip(); }
+
+// The Look menu: swap the look's CSS now, and let Python save the choice.
+const look = document.getElementById("look");
+if (look) look.addEventListener("change", () => {
+  const style = document.getElementById("hgtheme");
+  if (style) style.textContent = window.hgThemes[look.value] || "";
+  pycmd("theme:" + look.value);
+});
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && panel.style.display === "flex") closePanel();
 });
@@ -687,6 +697,22 @@ def pills(choices, current: str, command: str) -> str:
     return "".join(parts)
 
 
+def look_html(config: dict) -> str:
+    """The Look menu, top right. Every look's CSS is in the page, so
+    changing it swaps the <style id='hgtheme'> at once (see JS) and tells
+    Python to save the choice, without rebuilding the grid."""
+    current = config.get("theme", themes.DEFAULT_THEME)
+    options = "".join(
+        f"<option value='{value}'{' selected' if value == current else ''}>{text}</option>"
+        for value, text in themes.THEME_CHOICES
+    )
+    css = {value: themes.THEMES[value]["css"] for value, _ in themes.THEME_CHOICES}
+    return (
+        f"<label class='look'>Look <select id='look'>{options}</select></label>"
+        f"<script>window.hgThemes = {json.dumps(css)};</script>"
+    )
+
+
 def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = None) -> str:
     """Turn the Grid from grid_data.collect() into an HTML page body."""
     view = config.get("view", CHARS)
@@ -702,6 +728,7 @@ def build_html(grid: grid_data.Grid, config: dict, grammar_done: set | None = No
 
     parts.append("<div class='switch'>")
     parts.append("<button class='settings' data-cmd='settings'>⚙ Settings</button>")
+    parts.append(look_html(config))
     parts.append("<span class='label'>View:</span>" + pills(VIEW_CHOICES, view, "view"))
     if view == CHARS:
         parts.append("<span class='label'>Levels:</span>" + pills(LEVEL_CHOICES, levels, "levels"))
@@ -1168,7 +1195,7 @@ class HanziGridDialog(QDialog):
             build_html(grid, config, load_grammar_done() if config.get("view") == GRAMMAR else None),
             css=[],
             js=[],
-            head=f"<style>{CSS}{themes.theme(config)['css']}</style>",
+            head=f"<style>{CSS}</style><style id='hgtheme'>{themes.theme(config)['css']}</style>",
             context=self,
         )
         self.show()
@@ -1180,6 +1207,11 @@ class HanziGridDialog(QDialog):
         elif cmd.startswith("levels:"):
             self.config["levels"] = cmd[len("levels:"):]
             save_config(self.config)
+        elif cmd.startswith("theme:"):
+            # The page has already switched its look; just remember it.
+            # No rebuild: the deck-list summary picks it up on its next redraw.
+            self.config["theme"] = cmd[len("theme:"):]
+            mw.addonManager.writeConfig(__name__, self.config)
         elif cmd.startswith("view:"):
             self.config["view"] = cmd[len("view:"):]
             save_config(self.config)

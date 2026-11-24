@@ -37,6 +37,8 @@ from aqt.qt import (
 )
 from aqt.utils import disable_help_button
 
+from . import themes
+
 NO_FIELD = "(none)"
 
 
@@ -149,7 +151,7 @@ class SettingsDialog(QDialog):
         self.theme = QComboBox()
         for value, text in theme_choices:
             self.theme.addItem(text, value)
-        self.theme.setCurrentIndex(max(0, self.theme.findData(config.get("theme", "modern"))))
+        self.theme.setCurrentIndex(max(0, self.theme.findData(config.get("theme", themes.DEFAULT_THEME))))
         form.addRow("Look:", self.theme)
 
         # --- Deck list summary --------------------------------------------

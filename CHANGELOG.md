@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.9.0 (2026-11-24)
+
+- Two new looks: **Gems** (peach, sky, blue, violet for well known, gold
+  for mastered) and **Seal** (rice paper, pale jade, jade, ink blue for
+  well known, a red seal stamp 印章 for mastered). Modern stays the
+  default; Classic is still there.
+- A **Look** menu at the top right of the grid switches instantly, without
+  rebuilding, and remembers the choice (config key `theme`).
+
 ## 1.8.0 (2026-11-24)
 
 - **Well known**, a new level between mature and mastered: a 45+ day

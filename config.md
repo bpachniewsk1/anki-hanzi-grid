@@ -13,6 +13,6 @@ The easiest way to change these is the **⚙ Settings** button in the grid (the 
 - **mastered_days**: a card's interval (in days) from which it counts as "mastered", the top level, if its last 3 reviews were also answered correctly. Can't be lower than **mature_days**. Default: `90` (about three months).
 - **weak_lapses**: how often you must have forgotten a card (Anki's lapses count) for it to get a red "weak" dot. Default: `3`.
 - **deck_widget**: `true` shows a small progress summary (one bar per level) under the deck list on Anki's main screen, with an Open link. Default: `true`.
-- **theme**: the look of the grid, `"modern"` (softer, rounder) or `"classic"` (the original). Settings → Look. Default: `"modern"`.
+- **theme**: the look of the grid: `"modern"` (softer, rounder, greens), `"gems"` (blue, violet and gold), `"seal"` (jade, ink blue and a red seal stamp for mastered) or `"classic"` (the original). The Look menu in the grid and Settings → Look change it. Default: `"modern"`.
 
 Changes apply the next time the grid opens.

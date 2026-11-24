@@ -46,9 +46,12 @@ it, with a progress bar for each level.
   your computer.
 - **Summary on the deck list:** one bar per level under Anki's deck list,
   with "+N this week" and an Open link. Turn it off in Settings.
-- **Two looks:** *Modern* (default: flat, rounded, a fresh green scale) and
-  *Classic* (the original). Switch in Settings → Look; both follow Anki's
-  night mode.
+- **Four looks**, switched instantly from the **Look** menu at the top
+  right of the grid (or Settings → Look), and remembered:
+  *Modern* (default: flat, rounded, a green scale ending in deep teal and
+  gold-on-green), *Gems* (peach, sky, blue, violet, then gold for
+  mastered), *Seal* (rice paper, pale jade, jade, ink blue, then a red
+  seal stamp 印章 for mastered) and *Classic* (the original).
 - **Progress bars** for each level and for all levels together, with
   "studied", "mature", "well known" and "mastered" numbers, and **"+N this week"** for
   what you started in the last 7 days.
@@ -155,7 +158,7 @@ Click **⚙ Settings** in the grid, or select Hanzi Grid in
 | Mastered from | Interval in days from which a card counts as mastered (at least the mature value). | 90 days |
 | Weak from | How often you must have forgotten a card (lapses) for its tile to get a red dot. | 3 lapses |
 | Show a progress summary on the deck list | The small bars under Anki's deck list. | on |
-| Look | Modern or Classic colours and shapes. | Modern |
+| Look | Modern, Gems, Seal or Classic. Also in the Look menu in the grid. | Modern |
 
 The defaults fit the [Anki-xiehanzi](https://github.com/krmanik/Anki-xiehanzi)
 "New HSK (2025)" deck. For other decks, pick your deck and its field names.
@@ -251,7 +254,7 @@ of your collection.
 | `grid_data.py` | Reads notes and cards and builds the groups. No user interface code, so it can be tested outside Anki. |
 | `previewer.py` | The preview window, a small subclass of Anki's own card previewer. |
 | `deck_widget.py` | The summary under the deck list (built in the background and cached). |
-| `themes.py` | The Modern and Classic looks: status colours and the CSS layered on the base style. |
+| `themes.py` | The Modern, Gems, Seal and Classic looks: status colours and the CSS layered on the base style. |
 | `data/grammar/` | The grammar points and notes for the Grammar view; see `SOURCE.md` there. |
 | `data/classifiers/` | Which measure word each word takes, from CC-CEDICT; see `SOURCE.md` there. |
 | `settings.py` | The Settings window, built from standard Qt widgets. |

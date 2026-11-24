@@ -128,7 +128,7 @@ def widget_html(grid: grid_data.Grid, config: dict, now_ms: int | None = None) -
     words = config.get("view", "chars") == "words"
     groups = grid.words if words else grid.chars
     colours = themes.theme(config)["colours"]
-    modern = config.get("theme", "modern") == "modern"
+    modern = config.get("theme", themes.DEFAULT_THEME) != "classic"  # modern shapes
     rows = []
     total_week = 0
     for label, items in groups:
