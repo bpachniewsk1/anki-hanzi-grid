@@ -8,6 +8,7 @@
   "pinyin_field": "Pinyin",
   "meaning_fields": ["SimpleMeaning", "Definitions"],
   "mature_days": 21,
+  "well_known_days": 45,
   "mastered_days": 90,
   "weak_lapses": 3,
   "deck_widget": true,

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.8.0 (2026-11-24)
+
+- **Well known**, a new level between mature and mastered: a 45+ day
+  interval and the last 2 reviews answered correctly. Deep teal tiles with
+  a gold line along the bottom, on the way to mastered's gold characters.
+  Shown in the legend, the progress bars and numbers ("N well known"), the
+  deck-list summary, the Mature+ filter and the Reading view. The number
+  of days is a new setting, Well known from (`well_known_days`).
+
 ## 1.7.1 (2026-11-19)
 
 - Find works much more visibly in every view: matches get a yellow ring

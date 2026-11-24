@@ -86,7 +86,7 @@ class Tile(NamedTuple):
     """One character in the Characters view."""
 
     char: str
-    status: int  # UNSEEN, LEARNING, YOUNG, MATURE or MASTERED
+    status: int  # UNSEEN, LEARNING, YOUNG, MATURE, WELL_KNOWN or MASTERED
     # Shown when hovering: the character's own note if the deck has one
     # (学 on its own), otherwise the lowest-level word containing it.
     # None if no word in the chosen decks contains the character.
@@ -117,12 +117,16 @@ UNSEEN = 0  # never answered (new cards, or none)
 LEARNING = 1  # in (re)learning steps, or answered but never graduated
 YOUNG = 2  # in review, interval below mature_days
 MATURE = 3  # in review, interval of mature_days or more
-MASTERED = 4  # interval of mastered_days or more, and MASTERED_REVIEWS
+WELL_KNOWN = 4  # interval of well_known_days or more, and WELL_KNOWN_REVIEWS
+#                 reviews in a row answered correctly
+MASTERED = 5  # interval of mastered_days or more, and MASTERED_REVIEWS
 #               reviews in a row answered correctly
 
 # Successful reviews in a row (since the last time you forgot the card)
-# needed for MASTERED. A long interval alone isn't enough: one review done
-# very late can give a card a 100+ day interval after only 2 or 3 answers.
+# needed for WELL_KNOWN and MASTERED. A long interval alone isn't enough:
+# one review done very late can give a card a 100+ day interval after only
+# 2 or 3 answers.
+WELL_KNOWN_REVIEWS = 2
 MASTERED_REVIEWS = 3
 
 # "Studied this week" means first answered in the last 7 days.
@@ -177,15 +181,18 @@ def card_status(
     history: History | None,
     mature_days: int,
     mastered_days: int,
+    well_known_days: int | None = None,
 ) -> int:
     """How well one card is known.
 
-    The interval decides young / mature / mastered, as in Anki's own stats,
+    The interval decides young / mature / well-known / mastered, as in Anki's own stats,
     but it's taken from your answers (the review log), not only from the
     card: a card moved ahead with "Set due date" keeps the interval your
     last answer gave it. `history` None means the card has no review log at
     all (e.g. it was deleted); then the card's interval and nothing else is
-    used, and it can't become MASTERED.
+    used, and it can't become WELL_KNOWN or MASTERED.
+
+    `well_known_days` None means halfway between mature and mastered.
     """
     if card_type == CARD_NEW:
         return UNSEEN
@@ -199,8 +206,14 @@ def card_status(
             return LEARNING  # answered in learning, then moved by hand
         interval = min(interval, history.interval)
         streak = history.streak
-    if interval >= max(mastered_days, mature_days) and streak >= MASTERED_REVIEWS:
+    mastered_days = max(mastered_days, mature_days)
+    if well_known_days is None:
+        well_known_days = (mature_days + mastered_days) // 2
+    well_known_days = min(max(well_known_days, mature_days), mastered_days)
+    if interval >= mastered_days and streak >= MASTERED_REVIEWS:
         return MASTERED
+    if interval >= well_known_days and streak >= WELL_KNOWN_REVIEWS:
+        return WELL_KNOWN
     return MATURE if interval >= mature_days else YOUNG
 
 
@@ -260,6 +273,7 @@ def collect(
     pinyin_field: str = "",
     meaning_fields: list[str] | None = None,
     classifiers: dict[str, list[str]] | None = None,
+    well_known_days: int | None = None,
 ) -> Grid:
     """Read the collection and build the Grid (see the Grid class).
 
@@ -315,7 +329,7 @@ def collect(
     query = f"select id, nid, ord, type, ivl, lapses from cards {card_filter}"
     for card_id, note_id, card_ord, card_type, interval, lapses in col.db.execute(query):
         history = read_history(logs[card_id]) if card_id in logs else None
-        status = card_status(card_type, interval, history, mature_days, mastered_days)
+        status = card_status(card_type, interval, history, mature_days, mastered_days, well_known_days)
         note_status[note_id] = max(note_status.get(note_id, UNSEEN), status)
         note_card[note_id] = min(note_card.get(note_id, (card_ord, card_id)), (card_ord, card_id))
         note_lapses[note_id] = max(note_lapses.get(note_id, 0), lapses)

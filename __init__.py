@@ -80,6 +80,7 @@ STATUS_NAMES = {
     grid_data.LEARNING: "Learning",
     grid_data.YOUNG: "Young",
     grid_data.MATURE: "Mature",
+    grid_data.WELL_KNOWN: "Well known",
     grid_data.MASTERED: "Mastered",
 }
 
@@ -135,7 +136,7 @@ h3 { margin: 1.2em 0 .3em; font-size: 1em; }
 /* The Show filter hides tiles in the grids (not in the Next up rows). */
 body[data-show="unseen"] .grid .tile:not(.s0) { display: none; }
 body[data-show="progress"] .grid .tile:not(.s1):not(.s2) { display: none; }
-body[data-show="mature"] .grid .tile:not(.s3):not(.s4) { display: none; }
+body[data-show="mature"] .grid .tile:not(.s3):not(.s4):not(.s5) { display: none; }
 body[data-show="weak"] .grid .tile:not(.weak) { display: none; }
 
 /* The hover box with pinyin and meaning. It's one box for the whole page,
@@ -258,7 +259,11 @@ body.finding .next { display: none; }
 .s1 { background: #f2c14e; color: #222; }
 .s2 { background: #9fd59a; color: #222; }
 .s3 { background: #2f8f57; color: #fff; }
-.s4 { background: #17472c; color: #ffd866; }
+.s4 { background: #1b6b80; color: #fff; }
+.s5 { background: #17472c; color: #ffd866; }
+/* Well known: a gold line along the bottom of the tile, on the way to
+   mastered's gold characters. */
+.tile.s4 { background: linear-gradient(to top, #ffd866 3px, #1b6b80 3px); }
 """
 
 # Clicks are sent to Python with pycmd(), Anki's bridge from the web page
@@ -551,8 +556,9 @@ def percent(part: int, whole: int) -> float:
 
 
 def progress(items, now_ms: int | None = None) -> str:
-    """A stacked bar (mastered, mature, young, learning) plus a line of
-    numbers, for a list of Tiles or Entries. Mastered counts as mature too.
+    """A stacked bar (mastered, well known, mature, young, learning) plus a
+    line of numbers, for a list of Tiles or Entries. Well known and
+    mastered count as mature too, and mastered as well known.
     """
     now_ms = now_ms if now_ms is not None else int(time.time() * 1000)
     total = len(items)
@@ -565,14 +571,16 @@ def progress(items, now_ms: int | None = None) -> str:
     segments = "".join(
         f"<div class='s{s}' style='width:{percent(counts[s], total):.2f}%' "
         f"title='{STATUS_NAMES[s]}: {counts[s]}'></div>"
-        for s in (grid_data.MASTERED, grid_data.MATURE, grid_data.YOUNG, grid_data.LEARNING)
+        for s in (grid_data.MASTERED, grid_data.WELL_KNOWN, grid_data.MATURE, grid_data.YOUNG, grid_data.LEARNING)
     )
     studied = total - counts[grid_data.UNSEEN]
     mastered = counts[grid_data.MASTERED]
-    mature = counts[grid_data.MATURE] + mastered
+    well_known = counts[grid_data.WELL_KNOWN] + mastered
+    mature = counts[grid_data.MATURE] + well_known
     numbers = (
         f"{studied} / {total} studied ({percent(studied, total):.0f}%) · "
         f"{mature} mature ({percent(mature, total):.0f}%) · "
+        f"{well_known} well known ({percent(well_known, total):.0f}%) · "
         f"{mastered} mastered ({percent(mastered, total):.0f}%)"
     )
     if this_week:
@@ -903,7 +911,7 @@ READING_JS = r"""
     const html = [];
     const seen = {};  // word -> count, for the list of words to learn
     let i = 0, charsTotal = 0, charsKnown = 0, charsMissing = 0, wordsTotal = 0, wordsKnown = 0;
-    const byStatus = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0};
+    const byStatus = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
     while (i < text.length) {
       const ch = text[i];
       if (ch === "\n") { html.push("<br>"); i++; continue; }
@@ -941,7 +949,7 @@ READING_JS = r"""
     const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
     stats.innerHTML = `<b>${pct(charsKnown, charsTotal)}% of characters</b> studied (${charsKnown} / ${charsTotal})` +
       ` · <b>${pct(wordsKnown, wordsTotal)}% of words</b> studied (${wordsKnown} / ${wordsTotal})` +
-      ` · mature or better: ${byStatus[3] + byStatus[4]} characters` +
+      ` · mature or better: ${byStatus[3] + byStatus[4] + byStatus[5]} characters` +
       (charsMissing ? ` · <span class='nxnote'>${charsMissing} characters in none of your decks</span>` : "");
     // Words to learn: the matched words you haven't studied, by level,
     // most frequent in the text first.
@@ -1303,6 +1311,7 @@ def collect(config: dict) -> grid_data.Grid:
         mature_days=config["mature_days"],
         decks=selected_decks(config),
         mastered_days=config.get("mastered_days", 90),
+        well_known_days=config.get("well_known_days", 45),
         pinyin_field=config.get("pinyin_field", ""),
         meaning_fields=config.get("meaning_fields", []),
         official_levels=grid_data.load_level_lists(DATA_FOLDER) if use_official else None,

@@ -16,13 +16,14 @@ it, with a progress bar for each level.
   | yellow | learning / relearning |
   | light green | young (in review, interval under 21 days) |
   | dark green | mature (interval 21 days or more) |
+  | deep teal with a gold line | well known (interval 45 days or more, and the last 2 reviews answered correctly) |
   | gold on deep green | mastered (interval 90 days or more, and the last 3 reviews answered correctly) |
 
   The interval is the one your last answer gave the card, so moving a card
   with **Set due date** doesn't make it mature, and a card put into review
   that way without being answered still counts as not studied. A forgotten
-  card drops back to learning; after that it needs 3 correct reviews in a
-  row again to be mastered. **Suspended cards are ignored**, so suspending
+  card drops back to learning; after that it needs 2 correct reviews in a
+  row again to be well known, and 3 to be mastered. **Suspended cards are ignored**, so suspending
   a card with a mistake stops it colouring its characters.
 
   A character takes the best colour among all cards whose word contains it,
@@ -49,7 +50,7 @@ it, with a progress bar for each level.
   *Classic* (the original). Switch in Settings → Look; both follow Anki's
   night mode.
 - **Progress bars** for each level and for all levels together, with
-  "studied", "mature" and "mastered" numbers, and **"+N this week"** for
+  "studied", "mature", "well known" and "mastered" numbers, and **"+N this week"** for
   what you started in the last 7 days.
 - **Hover** a tile to see its pinyin and meaning.
 - **Click a character** to open its page: every word that contains it,
@@ -66,7 +67,7 @@ it, with a progress bar for each level.
   page jumps to the first match, Enter / Shift+Enter step through them
   ("3 / 52"), Esc clears.
 - **Settings window** to choose decks, level source, fields and the mature,
-  mastered and weak thresholds.
+  well known, mastered and weak thresholds.
 - **Read-only:** the add-on never changes your cards or notes.
 
 ![Words view: one tile per word, grouped by HSK level](screenshots/words.png)
@@ -150,6 +151,7 @@ Click **⚙ Settings** in the grid, or select Hanzi Grid in
 | Pinyin field | Shown when hovering a character. | `Pinyin` |
 | Meaning field | Shown when hovering a character. If it's empty for a word, the second meaning field is used. Long meanings are cut at 120 characters. | `SimpleMeaning`, then `Definitions` |
 | Mature from | Interval in days from which a card counts as mature. | 21 days |
+| Well known from | Interval in days from which a card counts as well known (kept between the mature and mastered values). Also needs the last 2 reviews answered correctly. | 45 days |
 | Mastered from | Interval in days from which a card counts as mastered (at least the mature value). | 90 days |
 | Weak from | How often you must have forgotten a card (lapses) for its tile to get a red dot. | 3 lapses |
 | Show a progress summary on the deck list | The small bars under Anki's deck list. | on |

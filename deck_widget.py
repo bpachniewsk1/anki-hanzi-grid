@@ -34,7 +34,7 @@ _collect = None  # collect(config) -> Grid, run in a background thread
 _cache: dict = {"key": None, "html": ""}
 _building = False
 
-STATUSES = (grid_data.LEARNING, grid_data.YOUNG, grid_data.MATURE, grid_data.MASTERED)
+STATUSES = (grid_data.LEARNING, grid_data.YOUNG, grid_data.MATURE, grid_data.WELL_KNOWN, grid_data.MASTERED)
 
 # All class names start with "hg-" so they can't clash with Anki's own
 # styles or with other add-ons on the same page.
@@ -121,7 +121,7 @@ def start_build(key, config: dict) -> None:
 
 
 def widget_html(grid: grid_data.Grid, config: dict, now_ms: int | None = None) -> str:
-    """One row per level: label, a small bar, "studied / total · mature"."""
+    """One row per level: label, a small bar, "studied / total · mature · well known" (when any)."""
     import time
 
     now_ms = now_ms if now_ms is not None else int(time.time() * 1000)
@@ -142,14 +142,16 @@ def widget_html(grid: grid_data.Grid, config: dict, now_ms: int | None = None) -
                 week += 1
         total_week += week
         studied = sum(counts.values())
-        mature = counts[grid_data.MATURE] + counts[grid_data.MASTERED]
+        mature = counts[grid_data.MATURE] + counts[grid_data.WELL_KNOWN] + counts[grid_data.MASTERED]
+        well_known = counts[grid_data.WELL_KNOWN] + counts[grid_data.MASTERED]
         bar = "".join(
             f"<div style='width:{100 * counts[s] / total if total else 0:.2f}%;background:{colours[s]}'></div>"
             for s in reversed(STATUSES)
         )
+        well_known_text = f" · {well_known} well known" if well_known else ""
         rows.append(
             f"<tr><td>{escape(label)}</td><td><div class='hg-bar'>{bar}</div></td>"
-            f"<td class='hg-num'>{studied} / {total} · {mature} mature</td></tr>"
+            f"<td class='hg-num'>{studied} / {total} · {mature} mature{well_known_text}</td></tr>"
         )
     week_text = f" <span class='hg-week'>+{total_week} this week</span>" if total_week else ""
     what = "words" if words else "characters"

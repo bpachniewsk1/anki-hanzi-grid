@@ -120,12 +120,17 @@ class SettingsDialog(QDialog):
         self.backup_meaning_field = optional_field(meanings[1])
         form.addRow("…if that's empty:", self.backup_meaning_field)
 
-        # --- Mature and mastered thresholds -------------------------------
+        # --- Mature, well known and mastered thresholds -------------------------------
         self.mature_days = QSpinBox()
         self.mature_days.setRange(1, 3650)
         self.mature_days.setSuffix(" days")
         self.mature_days.setValue(config.get("mature_days", 21))
         form.addRow("Mature from:", self.mature_days)
+        self.well_known_days = QSpinBox()
+        self.well_known_days.setRange(1, 3650)
+        self.well_known_days.setSuffix(" days")
+        self.well_known_days.setValue(config.get("well_known_days", 45))
+        form.addRow("Well known from:", self.well_known_days)
         self.mastered_days = QSpinBox()
         self.mastered_days.setRange(1, 3650)
         self.mastered_days.setSuffix(" days")
@@ -177,8 +182,10 @@ class SettingsDialog(QDialog):
         meanings = [field_name(self.meaning_field), field_name(self.backup_meaning_field)]
         self.config["meaning_fields"] = [name for name in meanings if name]
         self.config["mature_days"] = self.mature_days.value()
-        # Mastered can't come before mature.
-        self.config["mastered_days"] = max(self.mastered_days.value(), self.mature_days.value())
+        # Mastered can't come before mature, well known sits in between.
+        mature, mastered = self.mature_days.value(), max(self.mastered_days.value(), self.mature_days.value())
+        self.config["mastered_days"] = mastered
+        self.config["well_known_days"] = min(max(self.well_known_days.value(), mature), mastered)
         self.config["weak_lapses"] = self.weak_lapses.value()
         self.config["deck_widget"] = self.deck_widget.isChecked()
         self.config["theme"] = self.theme.currentData()

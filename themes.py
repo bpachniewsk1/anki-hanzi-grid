@@ -14,9 +14,10 @@ Switching back is one setting: Look > Classic.
 
 from __future__ import annotations
 
-# Status colours (learning, young, mature, mastered) for the deck-list bars.
-CLASSIC_COLOURS = {1: "#f2c14e", 2: "#9fd59a", 3: "#2f8f57", 4: "#17472c"}
-MODERN_COLOURS = {1: "#fde68a", 2: "#a7f3d0", 3: "#10b981", 4: "#065f46"}
+# Status colours (learning, young, mature, well known, mastered) for the
+# deck-list bars.
+CLASSIC_COLOURS = {1: "#f2c14e", 2: "#9fd59a", 3: "#2f8f57", 4: "#1b6b80", 5: "#17472c"}
+MODERN_COLOURS = {1: "#fde68a", 2: "#a7f3d0", 3: "#10b981", 4: "#0e7490", 5: "#065f46"}
 
 # Rules that override the base CSS (same selectors, placed after it).
 MODERN_CSS = """
@@ -49,7 +50,9 @@ h2 { font-weight: 600; }
 .s1 { background: #fde68a; color: #713f12; }
 .s2 { background: #a7f3d0; color: #064e3b; }
 .s3 { background: #10b981; color: #fff; }
-.s4 { background: #065f46; color: #fcd34d; }
+.s4 { background: #0e7490; color: #fff; }
+.tile.s4 { background: linear-gradient(to top, #fcd34d 3px, #0e7490 3px); }
+.s5 { background: #065f46; color: #fcd34d; }
 """
 
 THEMES = {
